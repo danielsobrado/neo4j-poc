@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  neo4j:
+    image: neo4j:5.5
+    container_name: neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+
+  spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    depends_on:
+      - neo4j
+    environment:
+      - SPRING_DATA_NEO4J_URI=bolt://neo4j:7687
+      - SPRING_DATA_NEO4J_USERNAME=neo4j
+      - SPRING_DATA_NEO4J_PASSWORD=neo4j
+    ports:
+      - "8080:8080"

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "TradeProto";
+
+import "currency.proto";
+import "exchange.proto";
+
+enum Side {
+  BUY = 0;
+  SELL = 1;
+}
+
+message Trade {
+  string symbol = 1;
+  double price = 2;
+  double quantity = 3;
+  Side side = 4;
+  Currency currency = 5;
+  Exchange exchange = 6;
+  int64 timestamp = 7;
+}

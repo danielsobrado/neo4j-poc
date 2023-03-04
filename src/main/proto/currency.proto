@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "CurrencyProto";
+
+message Currency {
+  string code = 1;
+  string name = 2;
+  string symbol = 3;
+}

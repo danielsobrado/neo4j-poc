@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "PriceProto";
+
+import "currency.proto";
+
+message Price {
+  string symbol = 1;
+  double open = 2;
+  double high = 3;
+  double low = 4;
+  double close = 5;
+  double volume = 6;
+  Currency currency = 7;
+  int64 timestamp = 8;
+}

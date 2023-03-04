@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "ExchangeProto";
+
+message Exchange {
+  string name = 1;
+  string location = 2;
+  string timezone = 3;
+}
+
+
+
+
