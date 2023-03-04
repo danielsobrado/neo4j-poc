@@ -34,7 +34,7 @@ To get started with this project, follow these steps:
 1. Clone the repository:
 
 ```shell
-git clone https://github.com/your-username/poc-project.git
+git clone https://github.com/danielsobrado/neo4j-sandbox.git
 ```
 
 2. Build the project:
