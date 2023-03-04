@@ -21,20 +21,20 @@ public class PriceNode {
     @NonNull
     private String symbol;
 
-    private double open;
+    private Double open;
 
-    private double high;
+    private Double high;
 
-    private double low;
+    private Double low;
 
     @NonNull
-    private double close;
+    private Double close;
 
-    private double volume;
+    private Double volume;
 
     private CurrencyNode currency;
 
     private ExchangeNode exchange;
     @NonNull
-    private long timestamp;
+    private Long timestamp;
 }
