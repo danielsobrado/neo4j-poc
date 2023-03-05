@@ -5,7 +5,7 @@ services:
     image: neo4j:5.5
     container_name: neo4j
     environment:
-      - NEO4J_AUTH=neo4j/neo4j
+      - NEO4J_AUTH=neo4j/neo4j1234
     ports:
       - "7474:7474"
       - "7687:7687"
@@ -23,6 +23,6 @@ services:
     environment:
       - SPRING_DATA_NEO4J_URI=bolt://neo4j:7687
       - SPRING_DATA_NEO4J_USERNAME=neo4j
-      - SPRING_DATA_NEO4J_PASSWORD=neo4j
+      - SPRING_DATA_NEO4J_PASSWORD=neo4j1234
     ports:
       - "8080:8080"
