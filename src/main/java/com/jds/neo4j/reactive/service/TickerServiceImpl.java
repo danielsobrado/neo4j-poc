@@ -110,6 +110,7 @@ public class TickerServiceImpl implements TickerService {
     @Override
     public Mono<TickerNode> updateTicker(Long id, Ticker tickerProto) {
         log.debug("Updating ticker with id: {} from protobuf message: {}", id, tickerProto);
+        
         ExchangeNode exchangeNode = exchangeService.createExchangeNode(tickerProto.getExchange());
 
         return tickerRepository.findById(id)
@@ -126,6 +127,7 @@ public class TickerServiceImpl implements TickerService {
     @Override
     public Mono<Void> deleteTicker(Long id) {
         log.debug("Deleting ticker with id: {}", id);
+
         return tickerRepository.deleteById(id);
     }
 

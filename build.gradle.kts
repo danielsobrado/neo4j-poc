@@ -90,11 +90,3 @@ tasks.withType<Copy> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-tasks.withType<JacocoReport> {
-    reports {
-        xml.isEnabled = true
-        html.isEnabled = true
-    }
-}
-
