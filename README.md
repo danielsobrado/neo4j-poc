@@ -155,11 +155,13 @@ That's it! Now you know how to install and compile Protobuf for use in this proj
 Swagger is used to generate API documentation for each service. Once the services are running, you can view the Swagger
 UI by navigating to the following URLs in your web browser:
 
-- Currency Service: http://localhost:8081/swagger-ui.html
-- Exchange Service: http://localhost:8082/swagger-ui.html
-- Price Service: http://localhost:8083/swagger-ui.html
-- Ticker Service: http://localhost:8084/swagger-ui.html
-- Trade Service: http://localhost:8085/swagger-ui.html
+- Currency Service: http://localhost:8080/swagger-ui/index.html#/currency-controller
+- Exchange Service: http://localhost:8080/swagger-ui/index.html#/exchange-controller
+- Price Service: http://localhost:8080/swagger-ui/index.html#/price-controller
+- Ticker Service: http://localhost:8080/swagger-ui/index.html#/ticker-controller
+- Trade Service: http://localhost:8080/swagger-ui/index.html#/trade-controller
+
+You can find examples of json payloads in the test cases.
 
 ## Contributing
 
