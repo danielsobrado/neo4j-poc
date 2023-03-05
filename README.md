@@ -1,4 +1,4 @@
-# POC Project with Neo4j
+# PoC Project with Neo4j
 
 This project is a proof of concept to demonstrate how to use protobuff, Swagger APIs, Testcontainers and Neo4j to build
 an
