@@ -25,6 +25,11 @@ You can use [chcolatey](https://community.chocolatey.org/) to install the follow
 - Gradle (`choco install protoc`)
 - Protoc (`choco install gradle`)
 
+Optional:
+
+- Neo4j Desktop ([Download](https://neo4j.com/download/))
+- Rancher Desktop ([Download](https://rancherdesktop.io/))
+
 I usually work with WSL2/Ubuntu but in this case I used plain Windows.
 
 ## Getting Started
