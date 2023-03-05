@@ -113,7 +113,7 @@ class TradeRepositoryTest {
     static class TestContainerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            final Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>("neo4j:4.0").withoutAuthentication();
+            final Neo4jContainer<?> neo4jContainer = new Neo4jContainer<>("neo4j:5.5").withoutAuthentication();
             neo4jContainer.start();
             configurableApplicationContext
                     .addApplicationListener((ApplicationListener<ContextClosedEvent>) event -> neo4jContainer.stop());
