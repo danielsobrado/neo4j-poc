@@ -1,6 +1,5 @@
 import com.google.protobuf.gradle.protobuf
 
-
 plugins {
     java
     idea
@@ -8,6 +7,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("com.google.protobuf") version "0.9.2"
     id("io.freefair.lombok") version "6.6.3"
+    id("jacoco")
 }
 
 group = "com.jds.neo4j.reactive"
@@ -24,6 +24,7 @@ val protobufGradlePluginVersion = "0.8.18"
 val grpcVersion = "1.45.1"
 val neo4jHarnessVersion = "3.5.12"
 val junitJupiterVersion = "5.8.2"
+val jacocoVersion = "0.8.7"
 
 configurations {
     compileOnly {
@@ -65,6 +66,7 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test:$reactorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+    testImplementation("org.jacoco:org.jacoco.core:$jacocoVersion")
 }
 
 sourceSets {
@@ -88,3 +90,11 @@ tasks.withType<Copy> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
+    }
+}
+
