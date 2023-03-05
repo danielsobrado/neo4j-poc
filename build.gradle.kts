@@ -85,7 +85,6 @@ tasks.withType<Copy> {
     }
 }
 
-tasks.test {
-    // Use the built-in JUnit support of Gradle.
+tasks.withType<Test> {
     useJUnitPlatform()
 }

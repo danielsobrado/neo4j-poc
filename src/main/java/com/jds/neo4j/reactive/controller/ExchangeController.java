@@ -1,7 +1,7 @@
 package com.jds.neo4j.reactive.controller;
 
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
-import com.jds.neo4j.reactive.service.ExchangeService;
+import com.jds.neo4j.reactive.service.ExchangeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 public class ExchangeController {
-    
-    private final ExchangeService exchangeService;
+
+    private final ExchangeServiceImpl exchangeService;
 
     @GetMapping
     public Flux<ExchangeNode> getAllExchanges() {

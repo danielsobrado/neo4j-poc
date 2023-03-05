@@ -1,7 +1,8 @@
 package com.jds.neo4j.reactive.controller;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
-import com.jds.neo4j.reactive.service.CurrencyService;
+import com.jds.neo4j.reactive.service.CurrencyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 public class CurrencyController {
-    private final CurrencyService currencyService;
+    private final CurrencyServiceImpl currencyService;
 
     @GetMapping
     public Flux<CurrencyNode> getAllCurrencies() {
@@ -30,7 +31,7 @@ public class CurrencyController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<CurrencyNode> createCurrency(@RequestBody CurrencyNode currency) {
+    public Mono<CurrencyNode> createCurrency(@RequestBody String currency) throws InvalidProtocolBufferException {
         log.debug("Creating currency: {}", currency);
         return currencyService.createCurrency(currency);
     }

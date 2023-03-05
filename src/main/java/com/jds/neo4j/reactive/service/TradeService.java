@@ -19,5 +19,11 @@ public interface TradeService {
 
     Mono<TradeNode> updateTrade(Long id, TradeProto.Trade tradeProto);
 
+    Mono<TradeNode> updateTrade(Long id, TradeNode tradeNode);
+
     Mono<Void> deleteTrade(Long id);
+
+    TradeNode convertToNode(TradeProto.Trade trade);
+
+    TradeProto.Trade convertToProto(TradeNode tradeNode);
 }

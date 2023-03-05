@@ -1,52 +1,23 @@
 package com.jds.neo4j.reactive.service;
 
-
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
-import com.jds.neo4j.reactive.repository.CurrencyRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.jds.neo4j.reactive.model.CurrencyProto.Currency;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class CurrencyService {
-    private final CurrencyRepository currencyRepository;
+public interface CurrencyService {
+    Flux<CurrencyNode> getAllCurrencies();
 
-    public Flux<CurrencyNode> getAllCurrencies() {
-        log.debug("Getting all currencies");
-        return currencyRepository.findAll();
-    }
+    Mono<CurrencyNode> getCurrencyById(Long id);
 
-    public Mono<CurrencyNode> getCurrencyById(Long id) {
-        log.debug("Getting currency by id: {}", id);
-        return currencyRepository.findById(id);
-    }
+    Mono<CurrencyNode> createCurrency(Currency currency);
 
-    public Mono<CurrencyNode> createCurrency(CurrencyNode currency) {
-        log.debug("Creating currency: {}", currency);
-        return currencyRepository.save(currency);
-    }
+    Mono<CurrencyNode> createCurrency(String currencyJson) throws InvalidProtocolBufferException;
 
-    public Mono<CurrencyNode> updateCurrency(Long id, CurrencyNode currency) {
-        log.debug("Updating currency with id: {}, data: {}", id, currency);
-        return currencyRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(currency.getName());
-                    existing.setSymbol(currency.getSymbol());
-                    return existing;
-                })
-                .flatMap(currencyRepository::save);
-    }
+    Mono<CurrencyNode> updateCurrency(Long id, CurrencyNode currency);
 
-    public Mono<Void> deleteCurrency(Long id) {
-        log.debug("Deleting currency with id: {}", id);
-        return currencyRepository.deleteById(id);
-    }
+    Mono<CurrencyNode> updateCurrency(Long id, String currencyJson) throws InvalidProtocolBufferException;
+
+    Mono<Void> deleteCurrency(Long id);
 }
-
-
-
-

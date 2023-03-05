@@ -26,4 +26,14 @@ public class TickerNode {
     @EqualsAndHashCode.Include
     @NonNull
     private ExchangeNode exchange;
+
+    @NonNull
+    private Long timestamp;
+
+    public TickerNode(@NonNull String symbol, String name, @NonNull ExchangeNode exchange, @NonNull Long timestamp) {
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+        this.timestamp = timestamp;
+    }
 }

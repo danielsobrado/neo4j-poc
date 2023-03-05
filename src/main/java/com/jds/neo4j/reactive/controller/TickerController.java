@@ -1,7 +1,9 @@
 package com.jds.neo4j.reactive.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.TickerNode;
-import com.jds.neo4j.reactive.service.TickerService;
+import com.jds.neo4j.reactive.service.TickerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class TickerController {
 
-    private final TickerService tickerService;
+    private final TickerServiceImpl tickerService;
 
     @GetMapping
     public Flux<TickerNode> getAllTickers() {
@@ -31,13 +33,15 @@ public class TickerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<TickerNode> createTicker(@RequestBody TickerNode ticker) {
+    public Mono<TickerNode> createTicker(@RequestBody String ticker) throws InvalidProtocolBufferException, JsonProcessingException {
         log.info("Creating ticker {}", ticker);
+
+
         return tickerService.createTicker(ticker);
     }
 
     @PutMapping("/{id}")
-    public Mono<TickerNode> updateTicker(@PathVariable Long id, @RequestBody TickerNode ticker) {
+    public Mono<TickerNode> updateTicker(@PathVariable Long id, @RequestBody String ticker) throws InvalidProtocolBufferException {
         log.info("Updating ticker with id {}", id);
         return tickerService.updateTicker(id, ticker);
     }

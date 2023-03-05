@@ -1,54 +1,33 @@
 package com.jds.neo4j.reactive.service;
 
-
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
-import com.jds.neo4j.reactive.repository.ExchangeRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import com.jds.neo4j.reactive.model.ExchangeProto.Exchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class ExchangeService {
-    private final ExchangeRepository exchangeRepository;
+public interface ExchangeService {
 
-    public Flux<ExchangeNode> getAllExchanges() {
-        log.debug("Getting all exchanges");
-        return exchangeRepository.findAll();
+    Flux<ExchangeNode> getAllExchanges();
+
+    Mono<ExchangeNode> getExchangeById(Long id);
+
+    Mono<ExchangeNode> createExchange(String exchangeJson) throws InvalidProtocolBufferException;
+
+    Mono<ExchangeNode> createExchange(ExchangeNode exchange);
+
+    Mono<ExchangeNode> updateExchange(Long id, ExchangeNode exchange);
+
+    Mono<Void> deleteExchange(Long id);
+
+    default ExchangeNode createExchangeNode(Exchange exchange) {
+        // Extract the exchange information from the Trade message
+        String exchangeCode = exchange.getCode();
+        String exchangeName = exchange.getName();
+        String exchangeCountry = exchange.getCountry();
+
+        // Create a new ExchangeNode from the exchange information
+        return new ExchangeNode(exchangeCode, exchangeName, exchangeCountry);
     }
 
-    public Mono<ExchangeNode> getExchangeById(Long id) {
-        log.debug("Getting exchange by id: {}", id);
-        return exchangeRepository.findById(id);
-    }
-
-    public Mono<ExchangeNode> createExchange(ExchangeNode exchange) {
-        log.debug("Creating exchange: {}", exchange);
-        return exchangeRepository.save(exchange);
-    }
-
-    public Mono<ExchangeNode> updateExchange(Long id, ExchangeNode exchange) {
-        log.debug("Updating exchange with id: {}, data: {}", id, exchange);
-        return exchangeRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(exchange.getName());
-                    existing.setCountry(exchange.getCountry());
-                    existing.setCode(exchange.getCode());
-                    return existing;
-                })
-                .flatMap(exchangeRepository::save);
-    }
-
-    public Mono<Void> deleteExchange(Long id) {
-        log.debug("Deleting exchange with id: {}", id);
-        return exchangeRepository.deleteById(id);
-    }
 }
-
-
-
-
-

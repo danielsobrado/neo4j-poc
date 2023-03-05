@@ -1,7 +1,7 @@
 package com.jds.neo4j.reactive.controller;
 
 import com.jds.neo4j.reactive.graphs.model.PriceNode;
-import com.jds.neo4j.reactive.service.PriceService;
+import com.jds.neo4j.reactive.service.PriceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/prices")
 public class PriceController {
 
-    private final PriceService priceService;
+    private final PriceServiceImpl priceService;
 
     @Autowired
-    public PriceController(PriceService priceService) {
+    public PriceController(PriceServiceImpl priceService) {
         this.priceService = priceService;
     }
 

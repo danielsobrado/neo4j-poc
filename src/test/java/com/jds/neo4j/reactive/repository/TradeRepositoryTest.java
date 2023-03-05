@@ -1,10 +1,10 @@
-package com.jds.neo4j.reactive.neo4jreactive.repository;
+package com.jds.neo4j.reactive.repository;
 
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
 import com.jds.neo4j.reactive.model.TradeProto;
-import com.jds.neo4j.reactive.repository.TradeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
@@ -21,6 +21,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+@DisplayName("Trade Repository IT Test")
 @DataNeo4jTest
 @Transactional(propagation = Propagation.NEVER)
 @ContextConfiguration(initializers = TradeRepositoryTest.TestContainerInitializer.class)
@@ -91,7 +92,7 @@ class TradeRepositoryTest {
                 .expectNextMatches(trade -> trade.getSymbol().equals("AAPL"))
                 .expectComplete()
                 .verify();
-        
+
         tradeRepository.delete(tradeNode).block();
     }
 

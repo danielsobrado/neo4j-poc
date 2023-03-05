@@ -22,4 +22,10 @@ public class CurrencyNode {
     private String code;
     private String name;
     private String symbol;
+
+    public CurrencyNode(@NonNull String code, String name, String symbol) {
+        this.code = code;
+        this.name = name;
+        this.symbol = symbol;
+    }
 }
