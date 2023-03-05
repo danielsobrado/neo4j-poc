@@ -1,7 +1,8 @@
 package com.jds.neo4j.reactive.controller;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
-import com.jds.neo4j.reactive.service.TradeService;
+import com.jds.neo4j.reactive.service.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 public class TradeController {
-    private final TradeService tradeService;
+    private final TradeServiceImpl tradeService;
 
     @GetMapping
     public Flux<TradeNode> getAllTrades() {
@@ -30,13 +31,13 @@ public class TradeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<TradeNode> createTrade(@RequestBody TradeNode trade) {
+    public Mono<TradeNode> createTrade(@RequestBody String trade) throws InvalidProtocolBufferException {
         log.debug("Creating trade: {}", trade);
         return tradeService.createTrade(trade);
     }
 
     @PutMapping("/{id}")
-    public Mono<TradeNode> updateTrade(@PathVariable("id") Long id, @RequestBody TradeNode trade) {
+    public Mono<TradeNode> updateTrade(@PathVariable("id") Long id, @RequestBody String trade) throws InvalidProtocolBufferException {
         log.debug("Updating trade with id: {}, data: {}", id, trade);
         return tradeService.updateTrade(id, trade);
     }

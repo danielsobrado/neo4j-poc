@@ -45,6 +45,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenApiVersion")
     implementation("org.projectlombok:lombok")
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
     implementation("io.projectreactor:reactor-core:$reactorVersion") // Add this line if you're using Reactor
     implementation("javax.annotation:javax.annotation-api:$javaxAnnotationVersion")
     implementation("com.google.protobuf:protobuf-gradle-plugin:$protobufGradlePluginVersion")

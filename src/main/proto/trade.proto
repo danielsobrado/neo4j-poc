@@ -15,9 +15,8 @@ enum Side {
 message Trade {
   string symbol = 1;
   double price = 2;
-  double quantity = 3;
+  int64 quantity = 3;
   Side side = 4;
-  Currency currency = 5;
   Exchange exchange = 6;
   int64 timestamp = 7;
 }
