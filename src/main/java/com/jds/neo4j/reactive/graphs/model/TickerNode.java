@@ -24,7 +24,6 @@ public class TickerNode {
     private String name;
 
     @EqualsAndHashCode.Include
-    @NonNull
     private ExchangeNode exchange;
 
     @NonNull

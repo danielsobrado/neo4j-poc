@@ -16,7 +16,7 @@ public interface TickerService {
 
     Mono<TickerNode> createTicker(TickerProto.Ticker tickerProto);
 
-    Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException;
+    Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
 
     Mono<TickerNode> updateTicker(Long id, TickerProto.Ticker tickerProto);
 

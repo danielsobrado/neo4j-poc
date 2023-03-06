@@ -95,7 +95,7 @@ public class TradeServiceTest {
         exchangeNode.setCountry("USA");
 
         // mock exchangeService to return ExchangeNode
-        when(exchangeService.createExchangeNode(any(ExchangeProto.Exchange.class))).thenReturn(exchangeNode);
+        when(exchangeService.getExchangeNodeFromProto(any(ExchangeProto.Exchange.class))).thenReturn(exchangeNode);
 
         Long id = 1L;
 
@@ -120,7 +120,7 @@ public class TradeServiceTest {
         // Mock ExchangeService
         ExchangeService exchangeService = mock(ExchangeService.class);
         ExchangeNode exchangeNode = new ExchangeNode("NYSE", "New York Stock Exchange", "USA");
-        when(exchangeService.createExchangeNode(any()))
+        when(exchangeService.getExchangeNodeFromProto(any()))
                 .thenReturn(exchangeNode);
 
 
@@ -218,7 +218,7 @@ public class TradeServiceTest {
         assertEquals(tradeNode.getPrice(), updatedTradeNode.getPrice());
         assertEquals(tradeNode.getQuantity(), updatedTradeNode.getQuantity());
         assertEquals(tradeNode.getSide(), updatedTradeNode.getSide());
-        
+
     }
 
 }

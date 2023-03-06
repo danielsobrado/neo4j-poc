@@ -56,22 +56,23 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Mono<TickerNode> createTicker(String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException {
+    public Mono<TickerNode> createTicker(String tickerJson) throws InvalidProtocolBufferException {
         log.debug("Creating ticker from JSON: {}", tickerJson);
 
         Ticker.Builder tickerBuilder = Ticker.newBuilder();
 
-        // Parse the JSON string and get Exchange information
-        String exchangeJson = objectMapper.readTree(tickerJson).get("exchange").toString();
-
-        // Create a new ExchangeNode from the exchange information
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(Exchange.parseFrom(exchangeJson.getBytes()));
-
         // Parse the JSON string into a Ticker message
         JsonFormat.parser().ignoringUnknownFields().merge(tickerJson, tickerBuilder);
 
+        // Parse the Exchange field from the Ticker message
+        Exchange exchange = tickerBuilder.getExchange();
+
+        // Create a new ExchangeNode from the Exchange message
+        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(exchange);
+
         return tickerRepository.save(new TickerNode(tickerBuilder.getSymbol(), tickerBuilder.getName(), exchangeNode, tickerBuilder.getTimestamp()));
     }
+
 
     @Override
     public Mono<TickerNode> createTicker(Ticker tickerProto) {
@@ -79,25 +80,47 @@ public class TickerServiceImpl implements TickerService {
 
         Ticker.Builder tickerBuilder = Ticker.newBuilder();
 
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(tickerBuilder.getExchange());
+        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tickerBuilder.getExchange());
 
         TickerNode tickerNode = new TickerNode(tickerProto.getSymbol(), tickerProto.getName(), exchangeNode, tickerProto.getTimestamp());
         return tickerRepository.save(tickerNode);
     }
 
     @Override
-    public Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException {
+    public Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException {
         log.debug("Updating ticker with id: {} from JSON: {}", id, tickerJson);
 
         Ticker.Builder tickerBuilder = Ticker.newBuilder();
 
+        ExchangeNode exchangeNode;
+
+        // Check if exchange information is present in the JSON string
+        if (objectMapper.readTree(tickerJson).has("exchange")) {
+
+            // Parse the JSON string and get Exchange information
+            String exchangeJson = objectMapper.readTree(tickerJson).get("exchange").toString();
+
+            // Create a new ExchangeProto from the exchange json information
+            Exchange.Builder exchangeBuilder = Exchange.newBuilder();
+            JsonFormat.parser().ignoringUnknownFields().merge(exchangeJson, exchangeBuilder);
+            Exchange exchangeProto = exchangeBuilder.build();
+
+            // Create a new ExchangeNode from the exchange information
+            String exchangeCode = exchangeProto.getCode();
+            String exchangeName = exchangeProto.getName();
+            String exchangeCountry = exchangeProto.getCountry();
+            exchangeNode = new ExchangeNode(exchangeCode, exchangeName, exchangeCountry);
+
+        } else {
+            exchangeNode = null;
+        }
+
         // Parse the JSON string into a Ticker message
         JsonFormat.parser().ignoringUnknownFields().merge(tickerJson, tickerBuilder);
 
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(tickerBuilder.getExchange());
-
         return tickerRepository.findById(id)
                 .map(existing -> {
+                    existing.setId(id);
                     existing.setSymbol(tickerBuilder.getSymbol());
                     existing.setName(tickerBuilder.getName());
                     existing.setExchange(exchangeNode);
@@ -110,8 +133,8 @@ public class TickerServiceImpl implements TickerService {
     @Override
     public Mono<TickerNode> updateTicker(Long id, Ticker tickerProto) {
         log.debug("Updating ticker with id: {} from protobuf message: {}", id, tickerProto);
-        
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(tickerProto.getExchange());
+
+        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tickerProto.getExchange());
 
         return tickerRepository.findById(id)
                 .map(existing -> {

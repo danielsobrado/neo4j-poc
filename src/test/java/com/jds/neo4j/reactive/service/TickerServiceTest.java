@@ -69,14 +69,14 @@ class TickerServiceTest {
                 .build();
         String tickerJson = JsonFormat.printer().print(ticker);
 
-        when(exchangeService.createExchangeNode(any())).thenReturn(new ExchangeNode());
         when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode()));
+        when(exchangeService.getExchangeNodeFromProto(any())).thenReturn(new ExchangeNode());
 
-        tickerService.createTicker(tickerJson).as(StepVerifier::create)
+        StepVerifier.create(tickerService.createTicker(tickerJson))
                 .expectNextCount(1)
                 .verifyComplete();
 
-        verify(exchangeService).createExchangeNode(any());
+        verify(exchangeService).getExchangeNodeFromProto(any());
         verify(tickerRepository).save(any());
     }
 
@@ -93,14 +93,14 @@ class TickerServiceTest {
                 .setTimestamp(123456789L)
                 .build();
 
-        when(exchangeService.createExchangeNode(any())).thenReturn(new ExchangeNode());
+        when(exchangeService.getExchangeNodeFromProto(any())).thenReturn(new ExchangeNode());
         when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode()));
 
         tickerService.createTicker(ticker).as(StepVerifier::create)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        verify(exchangeService).createExchangeNode(any());
+        verify(exchangeService).getExchangeNodeFromProto(any());
         verify(tickerRepository).save(any());
     }
 
@@ -112,6 +112,8 @@ class TickerServiceTest {
 
         Exchange exchange = Exchange.newBuilder().setCode("NYSE").setName("New York Stock Exchange").setCountry("USA").build();
         String updatedTickerJson = "{\"symbol\":\"AAPL\",\"name\":\"Apple Inc.\",\"exchange\":{\"code\":\"NYSE\",\"name\":\"New York Stock Exchange\",\"country\":\"USA\"},\"timestamp\":1646100000}";
+
+        when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NYSE", "New York Stock Exchange", "USA"), 1646100000L)));
 
         // Act
         Mono<TickerNode> result = tickerService.updateTicker(1L, updatedTickerJson);

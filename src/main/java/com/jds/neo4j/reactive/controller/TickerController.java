@@ -41,7 +41,7 @@ public class TickerController {
     }
 
     @PutMapping("/{id}")
-    public Mono<TickerNode> updateTicker(@PathVariable Long id, @RequestBody String ticker) throws InvalidProtocolBufferException {
+    public Mono<TickerNode> updateTicker(@PathVariable Long id, @RequestBody String ticker) throws InvalidProtocolBufferException, JsonProcessingException {
         log.info("Updating ticker with id {}", id);
         return tickerService.updateTicker(id, ticker);
     }

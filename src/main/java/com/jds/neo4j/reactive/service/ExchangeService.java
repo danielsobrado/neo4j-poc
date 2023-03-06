@@ -20,7 +20,7 @@ public interface ExchangeService {
 
     Mono<Void> deleteExchange(Long id);
 
-    default ExchangeNode createExchangeNode(Exchange exchange) {
+    default ExchangeNode getExchangeNodeFromProto(Exchange exchange) {
         // Extract the exchange information from the Trade message
         String exchangeCode = exchange.getCode();
         String exchangeName = exchange.getName();

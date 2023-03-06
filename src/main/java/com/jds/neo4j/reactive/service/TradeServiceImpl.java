@@ -84,7 +84,7 @@ public class TradeServiceImpl implements TradeService {
         // Parse the JSON string into a Trade message
         JsonFormat.parser().ignoringUnknownFields().merge(tradeJson, tradeBuilder);
 
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(tradeBuilder.getExchange());
+        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tradeBuilder.getExchange());
 
         // Create a new TradeNode from the trade information and the ExchangeNode
         TradeNode tradeNode = new TradeNode(
@@ -138,7 +138,7 @@ public class TradeServiceImpl implements TradeService {
         log.debug("Converting trade to node: {}", trade);
 
         // Create an ExchangeNode from the exchange information
-        ExchangeNode exchangeNode = exchangeService.createExchangeNode(trade.getExchange());
+        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(trade.getExchange());
 
         // Create a new TradeNode from the trade information and the ExchangeNode
         return new TradeNode(
