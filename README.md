@@ -163,6 +163,22 @@ UI by navigating to the following URLs in your web browser:
 
 You can find examples of json payloads in the test cases.
 
+Or you can always do something like this:
+
+```java
+        Ticker ticker=Ticker.newBuilder()
+        .setSymbol("ABC")
+        .setName("ABC Inc.")
+        .setExchange(Exchange.newBuilder()
+        .setCode("NYSE")
+        .setName("New York Stock Exchange")
+        .setCountry("USA")
+        .build())
+        .setTimestamp(123456789L)
+        .build();
+        String tickerJson=JsonFormat.printer().print(ticker);
+```
+
 ## Contributing
 
 If you'd like to contribute to this project, please feel free to submit a pull request.
