@@ -161,6 +161,8 @@ UI by navigating to the following URLs in your web browser:
 - Ticker Service: http://localhost:8080/swagger-ui/index.html#/ticker-controller
 - Trade Service: http://localhost:8080/swagger-ui/index.html#/trade-controller
 
+![SwaggerExample](https://github.com/danielsobrado/neo4j-poc/blob/main/img/SwaggerExample.png "SwaggerExample")
+
 You can find examples of json payloads in the test cases.
 
 Or you can always do something like this:
