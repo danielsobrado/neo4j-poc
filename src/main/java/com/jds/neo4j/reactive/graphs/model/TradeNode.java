@@ -14,7 +14,7 @@ import static com.jds.neo4j.reactive.model.TradeProto.Side;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Node
+@Node("Trade")
 public class TradeNode {
     @Id
     @GeneratedValue

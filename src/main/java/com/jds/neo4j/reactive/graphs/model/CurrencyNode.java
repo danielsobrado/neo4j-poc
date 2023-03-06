@@ -12,7 +12,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Node
+@Node("Price")
 public class CurrencyNode {
     @Id
     @GeneratedValue
