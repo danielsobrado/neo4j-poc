@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "DividendYieldProto";
+
+import "ticker.proto";
+
+message DividendYield {
+  Ticker ticker = 1;
+  string date = 2;
+  double yield = 3;
+}
