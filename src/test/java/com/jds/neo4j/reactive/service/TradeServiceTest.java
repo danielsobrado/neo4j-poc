@@ -2,9 +2,12 @@ package com.jds.neo4j.reactive.service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
+import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
 import com.jds.neo4j.reactive.model.ExchangeProto;
 import com.jds.neo4j.reactive.model.ExchangeProto.Exchange;
+import com.jds.neo4j.reactive.model.TickerProto;
+import com.jds.neo4j.reactive.model.TradeProto;
 import com.jds.neo4j.reactive.model.TradeProto.Trade;
 import com.jds.neo4j.reactive.repository.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -25,7 +27,6 @@ import java.util.Objects;
 import static com.jds.neo4j.reactive.model.TradeProto.Side;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +38,7 @@ public class TradeServiceTest {
     private TradeRepository tradeRepository;
 
     @Mock
-    private ExchangeService exchangeService;
+    private TickerService tickerService;
 
     @InjectMocks
     private TradeServiceImpl tradeService;
@@ -45,15 +46,16 @@ public class TradeServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        ReflectionTestUtils.setField(tradeService, "tradeRepository", tradeRepository);
-        ReflectionTestUtils.setField(tradeService, "exchangeService", exchangeService);
     }
 
     @Test
     public void testGetAllTrades() {
+        TickerNode tickerNode = new TickerNode("AAPL");
+        ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
+        TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
+
         // mock repository to return Flux of TradeNode
-        when(tradeRepository.findAll()).thenReturn(Flux.just(new TradeNode()));
+        when(tradeRepository.findAll()).thenReturn(Flux.just(tradeNode));
 
         // call the method under test
         Flux<TradeNode> result = tradeService.getAllTrades();
@@ -69,7 +71,9 @@ public class TradeServiceTest {
     public void testGetTradeById() {
         Long id = 1L;
 
-        TradeNode tradeNode = new TradeNode();
+        TickerNode tickerNode = new TickerNode("AAPL");
+        ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
+        TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
         tradeNode.setId(id);
 
         // mock repository to return Mono of TradeNode
@@ -82,16 +86,15 @@ public class TradeServiceTest {
         assertNotNull(result);
 
         // verify that the result contains the expected TradeNode
-        assertEquals(id, result.block().getId());
+        assertEquals(id, Objects.requireNonNull(result.block()).getId());
     }
 
     @Test
     public void testCreateTrade() throws InvalidProtocolBufferException {
-        String tradeJson = "{\"symbol\": \"AAPL\", \"price\": 100, \"quantity\": 10, \"side\": \"BUY\", \"exchange\": {\"code\": \"NYSE\", \"name\": \"New York Stock Exchange\", \"country\": \"USA\"}, \"timestamp\": 1646534345}";
-
+        String tradeJson = "{'ticker': 'AAPL', 'price': 100, 'quantity': 10, 'side': 'BUY', 'exchange': {'code': 'NASDAQ', 'name': 'NASDAQ Stock Exchange', 'country': 'USA'}, 'timestamp': 1646534345}";
         ExchangeNode exchangeNode = new ExchangeNode();
-        exchangeNode.setCode("NYSE");
-        exchangeNode.setName("New York Stock Exchange");
+        exchangeNode.setCode("NASDAQ");
+        exchangeNode.setName("NASDAQ Stock Exchange");
         exchangeNode.setCountry("USA");
 
         // mock exchangeService to return ExchangeNode
@@ -119,20 +122,24 @@ public class TradeServiceTest {
     void testCreateTradeFromProto() throws InvalidProtocolBufferException {
         // Mock ExchangeService
         ExchangeService exchangeService = mock(ExchangeService.class);
-        ExchangeNode exchangeNode = new ExchangeNode("NYSE", "New York Stock Exchange", "USA");
+        ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
         when(exchangeService.getExchangeNodeFromProto(any()))
                 .thenReturn(exchangeNode);
 
-
         // Create a new Trade message
         Trade tradeProto = Trade.newBuilder()
-                .setSymbol("AAPL")
+                .setTicker(TickerProto.Ticker.newBuilder()
+                        .setSymbol("AAPL")
+                        .setName("Apple Inc.")
+                        .setExchange(TickerProto.Exchange.newBuilder().setCode("NASDAQ").build())
+                        .setTimestamp(System.currentTimeMillis())
+                        .build())
                 .setPrice(150.0)
                 .setQuantity(100)
                 .setSide(Side.BUY)
                 .setExchange(Exchange.newBuilder()
-                        .setCode("NYSE")
-                        .setName("New York Stock Exchange")
+                        .setCode("NASDAQ")
+                        .setName("NASDAQ Stock Exchange")
                         .setCountry("USA")
                         .build())
                 .setTimestamp(System.currentTimeMillis())
@@ -158,68 +165,49 @@ public class TradeServiceTest {
                 .verifyComplete();
     }
 
-
     @Test
-    public void testUpdateTrade() throws InvalidProtocolBufferException {
-        // Mock the TradeRepository
-        TradeRepository tradeRepository = mock(TradeRepository.class);
-        when(tradeRepository.save(any(TradeNode.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-        when(tradeRepository.findById(anyLong())).thenAnswer(invocation -> {
-            TradeNode tradeNode = new TradeNode();
-            tradeNode.setId(1L);
-            tradeNode.setSymbol("AAPL");
-            tradeNode.setPrice(150.0);
-            tradeNode.setQuantity(100L);
-            tradeNode.setSide(Side.BUY);
-            ExchangeNode exchangeNode = new ExchangeNode();
-            exchangeNode.setCode("NYSE");
-            exchangeNode.setName("New York Stock Exchange");
-            exchangeNode.setCountry("USA");
-            tradeNode.setExchange(exchangeNode);
-            tradeNode.setTimestamp(System.currentTimeMillis());
-            return Mono.just(tradeNode);
-        });
-        when(tradeRepository.delete(any(TradeNode.class))).thenReturn(Mono.empty());
+    public void testUpdateTrade() {
+        Long id = 1L;
 
-        // Create a new Trade message
-        Trade trade = Trade.newBuilder()
-                .setSymbol("AAPL")
-                .setPrice(150.0)
-                .setQuantity(100)
-                .setSide(Side.BUY)
-                .setExchange(Exchange.newBuilder()
-                        .setCode("NYSE")
-                        .setName("New York Stock Exchange")
-                        .setCountry("USA"))
+        TickerNode tickerNode = new TickerNode("AAPL");
+        ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
+        TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
+        tradeNode.setId(id);
+
+        // mock repository to return Mono of TradeNode
+        when(tradeRepository.findById(id)).thenReturn(Mono.just(tradeNode));
+        when(tradeRepository.save(any(TradeNode.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        // call the method under test
+        Mono<TradeNode> result = tradeService.updateTrade(id, new TradeNode(tickerNode, 110.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis()));
+
+        // verify that the result is not null
+        assertNotNull(result);
+
+        // verify that the result contains the expected TradeNode
+        assertEquals(id, Objects.requireNonNull(result.block()).getId());
+        assertEquals(110.0, result.block().getPrice(), 0.0);
+    }
+
+    private TradeNode createTradeNode(String symbol, Double price, Long quantity, TradeProto.Side side) {
+        TickerProto.Ticker ticker = TickerProto.Ticker.newBuilder()
+                .setSymbol(symbol)
+                .setName("Apple Inc.")
+                .setExchange(TickerProto.Exchange.newBuilder().setCode("NASDAQ").build())
                 .setTimestamp(System.currentTimeMillis())
                 .build();
 
-        // Create the tradeService using the mocked TradeRepository
-        TradeService tradeService = new TradeServiceImpl(tradeRepository, exchangeService);
+        // Mock the TickerService to return the created TickerProto.Ticker
+        when(tickerService.convertToProto(any(TickerNode.class))).thenReturn(ticker);
 
-        // Call the createTrade method with the new Trade message
-        Mono<TradeNode> createdTrade = tradeService.createTrade(trade);
-
-        // Retrieve the TradeNode from the database
-        TradeNode tradeNode = createdTrade.block();
-
-        // Update the TradeNode
-        tradeNode.setPrice(160.0);
-
-        // Call the updateTrade method with the updated TradeNode
-        Mono<TradeNode> updatedTrade = tradeService.updateTrade(1L, tradeNode);
-
-        // Retrieve the updated TradeNode from the database
-        TradeNode updatedTradeNode = updatedTrade.block();
-
-        // Check that the TradeNode was updated correctly
-        assertNotNull(updatedTradeNode);
-        assertEquals(tradeNode.getSymbol(), updatedTradeNode.getSymbol());
-        assertEquals(tradeNode.getPrice(), updatedTradeNode.getPrice());
-        assertEquals(tradeNode.getQuantity(), updatedTradeNode.getQuantity());
-        assertEquals(tradeNode.getSide(), updatedTradeNode.getSide());
-
+        TradeNode tradeNode = new TradeNode();
+        tradeNode.setTicker(ticker);
+        tradeNode.setPrice(price);
+        tradeNode.setQuantity(quantity);
+        tradeNode.setSide(side);
+        tradeNode.setTimestamp(System.currentTimeMillis());
+        return tradeNode;
     }
-
 }
+
 

@@ -120,7 +120,6 @@ public class TickerServiceImpl implements TickerService {
 
         return tickerRepository.findById(id)
                 .map(existing -> {
-                    existing.setId(id);
                     existing.setSymbol(tickerBuilder.getSymbol());
                     existing.setName(tickerBuilder.getName());
                     existing.setExchange(exchangeNode);

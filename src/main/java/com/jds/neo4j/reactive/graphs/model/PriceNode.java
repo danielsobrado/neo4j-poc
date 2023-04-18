@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 @Getter
 @Setter
@@ -19,8 +20,9 @@ public class PriceNode {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Relationship(type = "HAS_TICKER", direction = Relationship.Direction.INCOMING)
     @NonNull
-    private String symbol;
+    private TickerNode ticker;
 
     private Double open;
 
@@ -33,8 +35,10 @@ public class PriceNode {
 
     private Double volume;
 
+    @Relationship(type = "WITH_CURRENCY", direction = Relationship.Direction.INCOMING)
     private CurrencyNode currency;
 
+    @Relationship(type = "ON_EXCHANGE", direction = Relationship.Direction.INCOMING)
     private ExchangeNode exchange;
     @NonNull
     private Long timestamp;

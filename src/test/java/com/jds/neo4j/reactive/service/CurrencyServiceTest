@@ -1,5 +1,7 @@
 package com.jds.neo4j.reactive.service;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
 import com.jds.neo4j.reactive.model.CurrencyProto.Currency;
 import com.jds.neo4j.reactive.repository.CurrencyRepository;
@@ -46,7 +48,7 @@ class CurrencyServiceTest {
 
     @Test
     void getCurrencyById_ReturnsCurrency() {
-        Long currencyId = 1L;
+        String currencyId = "1";
         when(currencyRepository.findById(currencyId)).thenReturn(Mono.just(
                 new CurrencyNode("USD", "US Dollar", "$")
         ));
@@ -59,26 +61,27 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void createCurrency_ReturnsCreatedCurrency() {
+    void createCurrency_ReturnsCreatedCurrency() throws InvalidProtocolBufferException {
         Currency currency = Currency.newBuilder()
                 .setCode("USD")
                 .setName("US Dollar")
                 .setSymbol("$")
                 .build();
-        when(currencyRepository.save(any(CurrencyNode.class))).thenReturn(Mono.just(
-                new CurrencyNode("USD", "US Dollar", "$")
-        ));
 
-        Mono<CurrencyNode> result = currencyService.createCurrency(currency);
+        String currencyJson = JsonFormat.printer().print(currency);
+        CurrencyNode currencyNode = currencyService.convertToNode(currency);
+        when(currencyRepository.save(any(CurrencyNode.class))).thenReturn(Mono.just(currencyNode));
+
+        Mono<CurrencyNode> result = currencyService.createCurrency(currencyJson);
 
         StepVerifier.create(result)
-                .expectNext(new CurrencyNode("USD", "US Dollar", "$"))
+                .expectNext(currencyNode)
                 .verifyComplete();
     }
 
     @Test
     void updateCurrency_ReturnsUpdatedCurrency() {
-        Long currencyId = 1L;
+        String currencyId = "1";
         CurrencyNode updatedCurrency = new CurrencyNode("USD", "US Dollar", "$");
         when(currencyRepository.findById(currencyId)).thenReturn(Mono.just(
                 new CurrencyNode("USD", "Euro", "€")
@@ -96,7 +99,7 @@ class CurrencyServiceTest {
 
     @Test
     void deleteCurrency_DeletesCurrency() {
-        Long currencyId = 1L;
+        String currencyId = "1";
         when(currencyRepository.deleteById(currencyId)).thenReturn(Mono.empty());
 
         Mono<Void> result = currencyService.deleteCurrency(currencyId);

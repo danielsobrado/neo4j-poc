@@ -38,7 +38,7 @@ public class PriceServiceImpl implements PriceService {
         log.debug("Updating price with id: {}, data: {}", id, price);
         return priceRepository.findById(id)
                 .map(existing -> {
-                    existing.setSymbol(price.getSymbol());
+                    existing.setTicker(price.getTicker());
                     existing.setOpen(price.getOpen());
                     existing.setHigh(price.getHigh());
                     existing.setLow(price.getLow());

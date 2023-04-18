@@ -1,6 +1,7 @@
 package com.jds.neo4j.reactive.repository;
 
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
+import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
 import com.jds.neo4j.reactive.model.TradeProto;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ class TradeRepositoryTest {
 
         Flux<TradeNode> trades = tradeRepository.findBySymbol("AAPL");
         StepVerifier.create(trades)
-                .expectNextMatches(trade -> trade.getSymbol().equals("AAPL"))
+                .expectNextMatches(trade -> trade.getTicker().getSymbol().equals("AAPL"))
                 .expectComplete()
                 .verify();
 
@@ -52,7 +53,7 @@ class TradeRepositoryTest {
 
         Flux<TradeNode> trades = tradeRepository.findBySymbol("AAPL");
         StepVerifier.create(trades)
-                .expectNextMatches(trade -> trade.getSymbol().equals("AAPL"))
+                .expectNextMatches(trade -> trade.getTicker().getSymbol().equals("AAPL"))
                 .expectComplete()
                 .verify();
 
@@ -89,23 +90,25 @@ class TradeRepositoryTest {
 
         Mono<TradeNode> foundTrade = tradeRepository.findById(tradeNode.getId());
         StepVerifier.create(foundTrade)
-                .expectNextMatches(trade -> trade.getSymbol().equals("AAPL"))
+                .expectNextMatches(trade -> trade.getTicker().getSymbol().equals("AAPL"))
                 .expectComplete()
                 .verify();
 
         tradeRepository.delete(tradeNode).block();
     }
 
-    private TradeNode createTradeNode(String symbol, Double price, Long quantity, TradeProto.Side side) {
+    private TradeNode createTradeNode(String ticker, Double price, Long quantity, TradeProto.Side side) {
         ExchangeNode exchangeNode = new ExchangeNode();
         exchangeNode.setCode("NASDAQ");
 
+        TickerNode tickerNode = new TickerNode();
+        tickerNode.setSymbol(ticker);
+
         TradeNode tradeNode = new TradeNode();
-        tradeNode.setSymbol(symbol);
+        tradeNode.setTicker(tickerNode);
         tradeNode.setPrice(price);
         tradeNode.setQuantity(quantity);
         tradeNode.setSide(side);
-        tradeNode.setExchange(exchangeNode);
         tradeNode.setTimestamp(System.currentTimeMillis());
         return tradeNode;
     }

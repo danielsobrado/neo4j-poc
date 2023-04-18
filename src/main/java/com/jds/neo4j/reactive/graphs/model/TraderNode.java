@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,14 +13,13 @@ import org.springframework.data.neo4j.core.schema.Node;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Node("Currency")
-public class CurrencyNode {
+@Node("Trader")
+public class TraderNode {
 
-    @Id
     @EqualsAndHashCode.Include
     @NonNull
-    private String code;
+    @Id
     private String name;
-    private String symbol;
-
+    private Double cash;
+    private Set<PortfolioNode> portfolios;
 }

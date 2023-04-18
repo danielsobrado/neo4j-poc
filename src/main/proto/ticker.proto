@@ -4,7 +4,6 @@ package com.jds.neo4j.reactive.model;
 option java_package = "com.jds.neo4j.reactive.model";
 option java_outer_classname = "TickerProto";
 
-import "currency.proto";
 import "exchange.proto";
 
 message Ticker {

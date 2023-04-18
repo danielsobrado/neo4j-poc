@@ -5,7 +5,7 @@ option java_package = "com.jds.neo4j.reactive.model";
 option java_outer_classname = "TradeProto";
 
 import "currency.proto";
-import "exchange.proto";
+import "ticker.proto";
 
 enum Side {
   BUY = 0;
@@ -13,10 +13,10 @@ enum Side {
 }
 
 message Trade {
-  string symbol = 1;
+  Ticker ticker = 1;
   double price = 2;
   int64 quantity = 3;
-  Side side = 4;
-  Exchange exchange = 6;
-  int64 timestamp = 7;
+  Currency currency = 4;
+  Side side = 5;
+  int64 timestamp = 6;
 }

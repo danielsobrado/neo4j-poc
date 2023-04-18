@@ -24,7 +24,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/{id}")
-    public Mono<CurrencyNode> getCurrencyById(@PathVariable("id") Long id) {
+    public Mono<CurrencyNode> getCurrencyById(@PathVariable("id") String id) {
         log.debug("Getting currency by id: {}", id);
         return currencyService.getCurrencyById(id);
     }
@@ -37,14 +37,14 @@ public class CurrencyController {
     }
 
     @PutMapping("/{id}")
-    public Mono<CurrencyNode> updateCurrency(@PathVariable("id") Long id, @RequestBody CurrencyNode currency) {
+    public Mono<CurrencyNode> updateCurrency(@PathVariable("id") String id, @RequestBody CurrencyNode currency) {
         log.debug("Updating currency with id: {}, data: {}", id, currency);
         return currencyService.updateCurrency(id, currency);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteCurrency(@PathVariable("id") Long id) {
+    public Mono<Void> deleteCurrency(@PathVariable("id") String id) {
         log.debug("Deleting currency with id: {}", id);
         return currencyService.deleteCurrency(id);
     }

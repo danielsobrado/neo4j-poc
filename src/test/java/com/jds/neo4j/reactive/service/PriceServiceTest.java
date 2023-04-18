@@ -3,6 +3,7 @@ package com.jds.neo4j.reactive.service;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.PriceNode;
+import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.repository.PriceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,14 +33,12 @@ class PriceServiceTest {
 
         // Create Currency
         CurrencyNode currencyNode = new CurrencyNode();
-        currencyNode.setId(1L);
         currencyNode.setSymbol("USD");
         currencyNode.setName("US Dollar");
         currencyNode.setSymbol("$");
 
         // Create Exchange
         ExchangeNode exchangeNode = new ExchangeNode();
-        exchangeNode.setId(1L);
         exchangeNode.setName("Binance");
         exchangeNode.setCode("BINANCE");
         exchangeNode.setCountry("Singapore");
@@ -47,9 +46,11 @@ class PriceServiceTest {
 
         priceService = new PriceServiceImpl(priceRepository);
 
+        TickerNode tickerNode = new TickerNode();
+        tickerNode.setSymbol("BTC");
+
         testPrice = new PriceNode();
-        testPrice.setId(1L);
-        testPrice.setSymbol("BTC");
+        testPrice.setTicker(tickerNode);
         testPrice.setOpen(10000.0);
         testPrice.setHigh(11000.0);
         testPrice.setLow(9000.0);
@@ -90,8 +91,12 @@ class PriceServiceTest {
 
     @Test
     void testUpdatePrice() {
+
+        TickerNode tickerNode = new TickerNode();
+        tickerNode.setSymbol("ETH");
+
         PriceNode updatedPrice = new PriceNode();
-        updatedPrice.setSymbol("ETH");
+        updatedPrice.setTicker(tickerNode);
         updatedPrice.setClose(1000.0);
         updatedPrice.setCurrency(testPrice.getCurrency());
         updatedPrice.setExchange(testPrice.getExchange());

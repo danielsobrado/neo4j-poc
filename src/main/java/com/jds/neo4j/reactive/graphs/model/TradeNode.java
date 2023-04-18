@@ -1,9 +1,11 @@
 package com.jds.neo4j.reactive.graphs.model;
 
+import com.jds.neo4j.reactive.model.TickerProto;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import static com.jds.neo4j.reactive.model.TradeProto.Side;
 
@@ -20,24 +22,35 @@ public class TradeNode {
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long id;
+
     @NonNull
-    private String symbol;
+    @Relationship(type = "HAS_TICKER", direction = Relationship.Direction.INCOMING)
+    private TickerNode ticker;
 
     @NonNull
     private Double price;
+
     @NonNull
     private Long quantity;
+
     private Side side;
-    private ExchangeNode exchange;
+
     @NonNull
     private Long timestamp;
 
-    public TradeNode(@NonNull String symbol, @NonNull Double price, @NonNull Long quantity, Side side, ExchangeNode exchange, @NonNull Long timestamp) {
-        this.symbol = symbol;
+    public TradeNode(TickerProto.Ticker ticker, double price, long quantity, Side side, long timestamp) {
+        this.ticker = new TickerNode(ticker);
         this.price = price;
         this.quantity = quantity;
         this.side = side;
-        this.exchange = exchange;
+        this.timestamp = timestamp;
+    }
+
+    public TradeNode(TickerNode tickerNode, double v, long l, Side buy, ExchangeNode exchangeNode, long timestamp) {
+        this.ticker = tickerNode;
+        this.price = v;
+        this.quantity = l;
+        this.side = buy;
         this.timestamp = timestamp;
     }
 }

@@ -1,11 +1,9 @@
 package com.jds.neo4j.reactive.service;
 
-
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
-import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
-import com.jds.neo4j.reactive.model.ExchangeProto.Exchange;
+import com.jds.neo4j.reactive.model.TickerProto;
 import com.jds.neo4j.reactive.model.TradeProto.Trade;
 import com.jds.neo4j.reactive.repository.TradeRepository;
 import lombok.NonNull;
@@ -26,17 +24,8 @@ public class TradeServiceImpl implements TradeService {
     private final TradeRepository tradeRepository;
 
     @NonNull
-    private final ExchangeService exchangeService;
+    private final TickerService tickerService;
 
-    static Exchange createExchangeProto(TradeNode tradeNode) {
-
-        // Create a new Exchange message from the ExchangeNode
-        return Exchange.newBuilder()
-                .setCode(tradeNode.getExchange().getCode())
-                .setName(tradeNode.getExchange().getName())
-                .setCountry(tradeNode.getExchange().getCountry())
-                .build();
-    }
 
     @Override
     public Flux<TradeNode> getAllTrades() {
@@ -84,17 +73,8 @@ public class TradeServiceImpl implements TradeService {
         // Parse the JSON string into a Trade message
         JsonFormat.parser().ignoringUnknownFields().merge(tradeJson, tradeBuilder);
 
-        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tradeBuilder.getExchange());
-
-        // Create a new TradeNode from the trade information and the ExchangeNode
-        TradeNode tradeNode = new TradeNode(
-                tradeBuilder.getSymbol(),
-                tradeBuilder.getPrice(),
-                tradeBuilder.getQuantity(),
-                tradeBuilder.getSide(),
-                exchangeNode,
-                tradeBuilder.getTimestamp()
-        );
+        // Convert the Trade message to a TradeNode object
+        TradeNode tradeNode = convertToNode(tradeBuilder.build());
 
         return updateTrade(id, tradeNode);
     }
@@ -115,11 +95,10 @@ public class TradeServiceImpl implements TradeService {
 
         return tradeRepository.findById(id)
                 .map(existing -> {
-                    existing.setSymbol(tradeNode.getSymbol());
+                    existing.setTicker(tradeNode.getTicker());
                     existing.setPrice(tradeNode.getPrice());
                     existing.setQuantity(tradeNode.getQuantity());
                     existing.setSide(tradeNode.getSide());
-                    existing.setExchange(tradeNode.getExchange());
                     existing.setTimestamp(tradeNode.getTimestamp());
                     return existing;
                 })
@@ -129,7 +108,6 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public Mono<Void> deleteTrade(Long id) {
         log.debug("Deleting trade with id: {}", id);
-
         return tradeRepository.deleteById(id);
     }
 
@@ -137,16 +115,12 @@ public class TradeServiceImpl implements TradeService {
     public TradeNode convertToNode(Trade trade) {
         log.debug("Converting trade to node: {}", trade);
 
-        // Create an ExchangeNode from the exchange information
-        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(trade.getExchange());
-
-        // Create a new TradeNode from the trade information and the ExchangeNode
+        // Create a new TradeNode from the trade information
         return new TradeNode(
-                trade.getSymbol(),
+                trade.getTicker(),
                 trade.getPrice(),
                 trade.getQuantity(),
                 trade.getSide(),
-                exchangeNode,
                 trade.getTimestamp()
         );
     }
@@ -155,20 +129,18 @@ public class TradeServiceImpl implements TradeService {
     public Trade convertToProto(TradeNode tradeNode) {
         log.debug("Converting trade to proto: {}", tradeNode);
 
-        Exchange exchange = createExchangeProto(tradeNode);
+        // Convert TickerNode to TickerProto.Ticker
+        TickerProto.Ticker ticker = tickerService.convertToProto(tradeNode.getTicker());
 
-        // Create a new Trade message from the trade information and the Exchange message
+        // Create a new Trade message from the trade information
         return Trade.newBuilder()
-                .setSymbol(tradeNode.getSymbol())
+                .setTicker(ticker)
                 .setPrice(tradeNode.getPrice())
                 .setQuantity(tradeNode.getQuantity())
                 .setSide(tradeNode.getSide())
-                .setExchange(exchange)
                 .setTimestamp(tradeNode.getTimestamp())
                 .build();
     }
 
+
 }
-
-
-
