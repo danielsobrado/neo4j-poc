@@ -23,10 +23,10 @@ public class ExchangeController {
         return exchangeService.getAllExchanges();
     }
 
-    @GetMapping("/{id}")
-    public Mono<ExchangeNode> getExchangeById(@PathVariable Long id) {
-        log.info("Retrieving exchange with id {}", id);
-        return exchangeService.getExchangeById(id);
+    @GetMapping("/{code}")
+    public Mono<ExchangeNode> getExchangeById(@PathVariable String code) {
+        log.info("Retrieving exchange with code {}", code);
+        return exchangeService.getExchangeById(code);
     }
 
     @PostMapping
@@ -36,15 +36,15 @@ public class ExchangeController {
         return exchangeService.createExchange(exchange);
     }
 
-    @PutMapping("/{id}")
-    public Mono<ExchangeNode> updateExchange(@PathVariable Long id, @RequestBody ExchangeNode exchange) {
-        log.info("Updating exchange with id {}", id);
-        return exchangeService.updateExchange(id, exchange);
+    @PutMapping("/{code}")
+    public Mono<ExchangeNode> updateExchange(@PathVariable String code, @RequestBody ExchangeNode exchange) {
+        log.info("Updating exchange with code {}", code);
+        return exchangeService.updateExchange(code, exchange);
     }
 
-    @DeleteMapping("/{id}")
-    public Mono<Void> deleteExchange(@PathVariable Long id) {
-        log.info("Deleting exchange with id {}", id);
-        return exchangeService.deleteExchange(id);
+    @DeleteMapping("/{code}")
+    public Mono<Void> deleteExchange(@PathVariable String code) {
+        log.info("Deleting exchange with code {}", code);
+        return exchangeService.deleteExchange(code);
     }
 }

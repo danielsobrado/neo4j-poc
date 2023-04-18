@@ -42,20 +42,8 @@ class ExchangeServiceTest {
     }
 
     @Test
-    void testGetExchangeById() {
-        Long id = 1L;
-        ExchangeNode exchangeNode = new ExchangeNode();
-        when(exchangeRepository.findById(id)).thenReturn(Mono.just(exchangeNode));
-
-        Mono<ExchangeNode> exchange = exchangeService.getExchangeById(id);
-
-        verify(exchangeRepository, times(1)).findById(id);
-        Assertions.assertNotNull(exchange);
-    }
-
-    @Test
     void testCreateExchangeWithJson() throws InvalidProtocolBufferException {
-        String exchangeJson = "{\"id\":1,\"name\":\"Exchange1\",\"country\":\"Country1\",\"code\":\"CODE1\"}";
+        String exchangeJson = "{\"name\":\"Exchange1\",\"country\":\"Country1\",\"code\":\"CODE1\"}";
         ExchangeNode exchangeNode = new ExchangeNode();
         when(exchangeRepository.save(any(ExchangeNode.class))).thenReturn(Mono.just(exchangeNode));
 
@@ -78,49 +66,40 @@ class ExchangeServiceTest {
 
     @Test
     void testUpdateExchange() {
-        Long id = 1L;
-        ExchangeNode existingExchange = new ExchangeNode();
-        existingExchange.setId(id);
-        existingExchange.setName("Exchange1");
-        existingExchange.setCountry("Country1");
-        existingExchange.setCode("CODE1");
-        ExchangeNode updatedExchange = new ExchangeNode();
-        updatedExchange.setId(id);
-        updatedExchange.setName("Exchange2");
-        updatedExchange.setCountry("Country2");
-        updatedExchange.setCode("CODE2");
-        when(exchangeRepository.findById(id)).thenReturn(Mono.just(existingExchange));
+        String code = "CODE1";
+        ExchangeNode existingExchange = new ExchangeNode("CODE1", "Exchange1", "Country1");
+        ExchangeNode updatedExchange = new ExchangeNode("CODE2", "Exchange2", "Country2");
+        when(exchangeRepository.findById(code)).thenReturn(Mono.just(existingExchange));
         when(exchangeRepository.save(any(ExchangeNode.class))).thenReturn(Mono.just(updatedExchange));
 
-        Mono<ExchangeNode> exchange = exchangeService.updateExchange(id, updatedExchange);
+        Mono<ExchangeNode> exchange = exchangeService.updateExchange(code, updatedExchange);
 
-        verify(exchangeRepository, times(1)).findById(id);
+        verify(exchangeRepository, times(1)).findById(code);
         verify(exchangeRepository, times(1)).save(any(ExchangeNode.class));
         Assertions.assertNotNull(exchange);
     }
 
+
     @Test
     void testDeleteExchange() {
         // Set up test data
-        Long exchangeId = 123L;
-        ExchangeNode exchangeNode = new ExchangeNode(exchangeId, "Test Exchange", "US", "TEX");
+        String exchangeCode = "TEX";
+        ExchangeNode exchangeNode = new ExchangeNode("TEX", "Test Exchange", "US");
 
         // Set up mock behavior
-        when(exchangeRepository.findById(exchangeId)).thenReturn(Mono.just(exchangeNode));
-        when(exchangeRepository.deleteById(exchangeId)).thenReturn(Mono.empty());
+        when(exchangeRepository.findById(exchangeCode)).thenReturn(Mono.just(exchangeNode));
+        when(exchangeRepository.deleteById(exchangeCode)).thenReturn(Mono.empty());
 
         // Invoke the method being tested
-        Mono<Void> result = exchangeService.deleteExchange(exchangeId);
+        Mono<Void> result = exchangeService.deleteExchange(exchangeCode);
 
         // Verify the result
         StepVerifier.create(result)
                 .verifyComplete();
 
         // Verify that the repository method was called
-        verify(exchangeRepository, times(1)).findById(exchangeId);
-        verify(exchangeRepository, times(1)).deleteById(exchangeId);
+        verify(exchangeRepository, times(1)).findById(exchangeCode);
+        verify(exchangeRepository, times(1)).deleteById(exchangeCode);
     }
-
 }
-
 

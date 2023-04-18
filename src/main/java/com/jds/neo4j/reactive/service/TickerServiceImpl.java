@@ -49,7 +49,7 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Mono<TickerNode> getTickerById(Long id) {
+    public Mono<TickerNode> getTickerById(String id) {
         log.debug("Getting ticker by id: {}", id);
 
         return tickerRepository.findById(id);
@@ -87,7 +87,7 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException {
+    public Mono<TickerNode> updateTicker(String id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException {
         log.debug("Updating ticker with id: {} from JSON: {}", id, tickerJson);
 
         Ticker.Builder tickerBuilder = Ticker.newBuilder();
@@ -130,7 +130,7 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Mono<TickerNode> updateTicker(Long id, Ticker tickerProto) {
+    public Mono<TickerNode> updateTicker(String id, Ticker tickerProto) {
         log.debug("Updating ticker with id: {} from protobuf message: {}", id, tickerProto);
 
         ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tickerProto.getExchange());
@@ -147,7 +147,7 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Mono<Void> deleteTicker(Long id) {
+    public Mono<Void> deleteTicker(String id) {
         log.debug("Deleting ticker with id: {}", id);
 
         return tickerRepository.deleteById(id);

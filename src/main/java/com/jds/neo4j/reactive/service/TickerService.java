@@ -10,17 +10,17 @@ import reactor.core.publisher.Mono;
 public interface TickerService {
     Flux<TickerNode> getAllTickers();
 
-    Mono<TickerNode> getTickerById(Long id);
+    Mono<TickerNode> getTickerById(String id);
 
     Mono<TickerNode> createTicker(String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
 
     Mono<TickerNode> createTicker(TickerProto.Ticker tickerProto);
 
-    Mono<TickerNode> updateTicker(Long id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
+    Mono<TickerNode> updateTicker(String id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
 
-    Mono<TickerNode> updateTicker(Long id, TickerProto.Ticker tickerProto);
+    Mono<TickerNode> updateTicker(String id, TickerProto.Ticker tickerProto);
 
-    Mono<Void> deleteTicker(Long id);
+    Mono<Void> deleteTicker(String id);
 
     TickerProto.Ticker convertToProto(TickerNode tickerNode);
 }

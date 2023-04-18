@@ -48,11 +48,11 @@ class TickerServiceTest {
 
     @Test
     void testGetTickerById() {
-        when(tickerRepository.findById(1L)).thenReturn(Mono.just(new TickerNode()));
-        tickerService.getTickerById(1L).as(StepVerifier::create)
+        when(tickerRepository.findById("1")).thenReturn(Mono.just(new TickerNode()));
+        tickerService.getTickerById("1").as(StepVerifier::create)
                 .expectNextCount(1)
                 .verifyComplete();
-        verify(tickerRepository).findById(1L);
+        verify(tickerRepository).findById("1");
     }
 
     @Test
@@ -108,7 +108,7 @@ class TickerServiceTest {
     public void testUpdateTickerWithJson() throws InvalidProtocolBufferException, JsonProcessingException {
         // Arrange
         TickerNode existingTicker = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA"), 1646000000L);
-        when(tickerRepository.findById(1L)).thenReturn(Mono.just(existingTicker));
+        when(tickerRepository.findById("1")).thenReturn(Mono.just(existingTicker));
 
         Exchange exchange = Exchange.newBuilder().setCode("NYSE").setName("New York Stock Exchange").setCountry("USA").build();
         String updatedTickerJson = "{\"symbol\":\"AAPL\",\"name\":\"Apple Inc.\",\"exchange\":{\"code\":\"NYSE\",\"name\":\"New York Stock Exchange\",\"country\":\"USA\"},\"timestamp\":1646100000}";
@@ -116,7 +116,7 @@ class TickerServiceTest {
         when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NYSE", "New York Stock Exchange", "USA"), 1646100000L)));
 
         // Act
-        Mono<TickerNode> result = tickerService.updateTicker(1L, updatedTickerJson);
+        Mono<TickerNode> result = tickerService.updateTicker("1", updatedTickerJson);
 
         // Assert
         StepVerifier.create(result)
@@ -134,7 +134,7 @@ class TickerServiceTest {
     @Test
     public void testDeleteTicker() {
         // Given
-        Long tickerId = 1L;
+        String tickerId = "1";
 
         // When
         when(tickerRepository.deleteById(tickerId)).thenReturn(Mono.empty());

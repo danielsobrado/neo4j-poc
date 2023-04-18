@@ -10,15 +10,15 @@ public interface ExchangeService {
 
     Flux<ExchangeNode> getAllExchanges();
 
-    Mono<ExchangeNode> getExchangeById(Long id);
+    Mono<ExchangeNode> getExchangeById(String code);
 
     Mono<ExchangeNode> createExchange(String exchangeJson) throws InvalidProtocolBufferException;
 
     Mono<ExchangeNode> createExchange(ExchangeNode exchange);
 
-    Mono<ExchangeNode> updateExchange(Long id, ExchangeNode exchange);
+    Mono<ExchangeNode> updateExchange(String code, ExchangeNode exchange);
 
-    Mono<Void> deleteExchange(Long id);
+    Mono<Void> deleteExchange(String code);
 
     default ExchangeNode getExchangeNodeFromProto(Exchange exchange) {
         // Extract the exchange information from the Trade message

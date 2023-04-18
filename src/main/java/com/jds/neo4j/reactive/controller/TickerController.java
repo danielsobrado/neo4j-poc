@@ -22,12 +22,14 @@ public class TickerController {
     @GetMapping
     public Flux<TickerNode> getAllTickers() {
         log.info("Retrieving all tickers");
+
         return tickerService.getAllTickers();
     }
 
     @GetMapping("/{id}")
-    public Mono<TickerNode> getTickerById(@PathVariable Long id) {
+    public Mono<TickerNode> getTickerById(@PathVariable String id) {
         log.info("Retrieving ticker with id {}", id);
+
         return tickerService.getTickerById(id);
     }
 
@@ -36,19 +38,20 @@ public class TickerController {
     public Mono<TickerNode> createTicker(@RequestBody String ticker) throws InvalidProtocolBufferException, JsonProcessingException {
         log.info("Creating ticker {}", ticker);
 
-
         return tickerService.createTicker(ticker);
     }
 
     @PutMapping("/{id}")
-    public Mono<TickerNode> updateTicker(@PathVariable Long id, @RequestBody String ticker) throws InvalidProtocolBufferException, JsonProcessingException {
+    public Mono<TickerNode> updateTicker(@PathVariable String id, @RequestBody String ticker) throws InvalidProtocolBufferException, JsonProcessingException {
         log.info("Updating ticker with id {}", id);
+
         return tickerService.updateTicker(id, ticker);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> deleteTicker(@PathVariable Long id) {
+    public Mono<Void> deleteTicker(@PathVariable String id) {
         log.info("Deleting ticker with id {}", id);
+
         return tickerService.deleteTicker(id);
     }
 }

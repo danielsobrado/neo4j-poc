@@ -1,6 +1,5 @@
 package com.jds.neo4j.reactive.service;
 
-
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.model.ExchangeProto.Exchange;
@@ -25,10 +24,10 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Mono<ExchangeNode> getExchangeById(Long id) {
-        log.debug("Getting exchange by id: {}", id);
+    public Mono<ExchangeNode> getExchangeById(String code) {
+        log.debug("Getting exchange by code: {}", code);
 
-        return exchangeRepository.findById(id);
+        return exchangeRepository.findById(code);
     }
 
     @Override
@@ -49,29 +48,23 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Mono<ExchangeNode> updateExchange(Long id, ExchangeNode exchange) {
-        log.debug("Updating exchange with id: {}, data: {}", id, exchange);
+    public Mono<ExchangeNode> updateExchange(String code, ExchangeNode exchange) {
+        log.debug("Updating exchange with code: {}, data: {}", code, exchange);
 
-        return exchangeRepository.findById(id)
+        return exchangeRepository.findById(code)
                 .map(existing -> {
                     existing.setName(exchange.getName());
                     existing.setCountry(exchange.getCountry());
-                    existing.setCode(exchange.getCode());
                     return existing;
                 })
                 .flatMap(exchangeRepository::save);
     }
 
     @Override
-    public Mono<Void> deleteExchange(Long id) {
-        log.debug("Deleting exchange with id: {}", id);
+    public Mono<Void> deleteExchange(String code) {
+        log.debug("Deleting exchange with code: {}", code);
 
-        return exchangeRepository.deleteById(id);
+        return exchangeRepository.deleteById(code);
     }
 
 }
-
-
-
-
-
