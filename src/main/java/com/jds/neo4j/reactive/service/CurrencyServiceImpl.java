@@ -1,6 +1,5 @@
 package com.jds.neo4j.reactive.service;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
 import com.jds.neo4j.reactive.model.CurrencyProto.Currency;
 import com.jds.neo4j.reactive.repository.CurrencyRepository;
@@ -23,48 +22,33 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Mono<CurrencyNode> getCurrencyById(String id) {
-        log.debug("Getting currency by id: {}", id);
-        return currencyRepository.findById(id);
+    public Mono<CurrencyNode> getCurrencyByCode(String code) {
+        log.debug("Getting currency by code: {}", code);
+        return currencyRepository.findById(code);
     }
 
     @Override
-    public Mono<CurrencyNode> createCurrency(String currencyJson) throws InvalidProtocolBufferException {
-        log.debug("Creating currency: {}", currencyJson);
-        Currency currency = Currency.parseFrom(currencyJson.getBytes());
-        CurrencyNode currencyNode = convertToNode(currency);
+    public Mono<CurrencyNode> createCurrency(CurrencyNode currencyNode) {
+        log.debug("Creating currency: {}", currencyNode);
         return currencyRepository.save(currencyNode);
     }
 
     @Override
-    public Mono<CurrencyNode> updateCurrency(String id, CurrencyNode currency) {
-        log.debug("Updating currency with id: {}, data: {}", id, currency);
-        return currencyRepository.findById(id)
+    public Mono<CurrencyNode> updateCurrency(String code, CurrencyNode currencyNode) {
+        log.debug("Updating currency with code: {}, data: {}", code, currencyNode);
+        return currencyRepository.findById(code)
                 .map(existing -> {
-                    existing.setName(currency.getName());
-                    existing.setSymbol(currency.getSymbol());
+                    existing.setName(currencyNode.getName());
+                    existing.setSymbol(currencyNode.getSymbol());
                     return existing;
                 })
                 .flatMap(currencyRepository::save);
     }
 
     @Override
-    public Mono<CurrencyNode> updateCurrency(String id, String currencyJson) throws InvalidProtocolBufferException {
-        log.debug("Updating currency with id: {}, data: {}", id, currencyJson);
-        Currency currency = Currency.parseFrom(currencyJson.getBytes());
-        return currencyRepository.findById(id)
-                .map(existing -> {
-                    existing.setName(currency.getName());
-                    existing.setSymbol(currency.getSymbol());
-                    return existing;
-                })
-                .flatMap(currencyRepository::save);
-    }
-
-    @Override
-    public Mono<Void> deleteCurrency(String id) {
-        log.debug("Deleting currency with id: {}", id);
-        return currencyRepository.deleteById(id);
+    public Mono<Void> deleteCurrency(String code) {
+        log.debug("Deleting currency with code: {}", code);
+        return currencyRepository.deleteById(code);
     }
 
     @Override

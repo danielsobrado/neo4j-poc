@@ -1,6 +1,5 @@
 package com.jds.neo4j.reactive.controller;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
 import com.jds.neo4j.reactive.service.CurrencyServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,30 +22,29 @@ public class CurrencyController {
         return currencyService.getAllCurrencies();
     }
 
-    @GetMapping("/{id}")
-    public Mono<CurrencyNode> getCurrencyById(@PathVariable("id") String id) {
-        log.debug("Getting currency by id: {}", id);
-        return currencyService.getCurrencyById(id);
+    @GetMapping("/{code}")
+    public Mono<CurrencyNode> getCurrencyByCode(@PathVariable("code") String code) {
+        log.debug("Getting currency by code: {}", code);
+        return currencyService.getCurrencyByCode(code);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<CurrencyNode> createCurrency(@RequestBody String currency) throws InvalidProtocolBufferException {
-        log.debug("Creating currency: {}", currency);
-        return currencyService.createCurrency(currency);
+    public Mono<CurrencyNode> createCurrency(@RequestBody CurrencyNode currencyNode) {
+        log.debug("Creating currency: {}", currencyNode);
+        return currencyService.createCurrency(currencyNode);
     }
 
-    @PutMapping("/{id}")
-    public Mono<CurrencyNode> updateCurrency(@PathVariable("id") String id, @RequestBody CurrencyNode currency) {
-        log.debug("Updating currency with id: {}, data: {}", id, currency);
-        return currencyService.updateCurrency(id, currency);
+    @PutMapping("/{code}")
+    public Mono<CurrencyNode> updateCurrency(@PathVariable("code") String code, @RequestBody CurrencyNode currencyNode) {
+        log.debug("Updating currency with code: {}, data: {}", code, currencyNode);
+        return currencyService.updateCurrency(code, currencyNode);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{code}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteCurrency(@PathVariable("id") String id) {
-        log.debug("Deleting currency with id: {}", id);
-        return currencyService.deleteCurrency(id);
+    public Mono<Void> deleteCurrency(@PathVariable("code") String code) {
+        log.debug("Deleting currency with code: {}", code);
+        return currencyService.deleteCurrency(code);
     }
 }
-

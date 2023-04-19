@@ -47,13 +47,13 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void getCurrencyById_ReturnsCurrency() {
-        String currencyId = "1";
-        when(currencyRepository.findById(currencyId)).thenReturn(Mono.just(
+    void getCurrencyByCode_ReturnsCurrency() {
+        String code = "USD";
+        when(currencyRepository.findById(code)).thenReturn(Mono.just(
                 new CurrencyNode("USD", "US Dollar", "$")
         ));
 
-        Mono<CurrencyNode> result = currencyService.getCurrencyById(currencyId);
+        Mono<CurrencyNode> result = currencyService.getCurrencyByCode(code);
 
         StepVerifier.create(result)
                 .expectNext(new CurrencyNode("USD", "US Dollar", "$"))
@@ -72,7 +72,7 @@ class CurrencyServiceTest {
         CurrencyNode currencyNode = currencyService.convertToNode(currency);
         when(currencyRepository.save(any(CurrencyNode.class))).thenReturn(Mono.just(currencyNode));
 
-        Mono<CurrencyNode> result = currencyService.createCurrency(currencyJson);
+        Mono<CurrencyNode> result = currencyService.createCurrency(currencyNode);
 
         StepVerifier.create(result)
                 .expectNext(currencyNode)
@@ -81,16 +81,16 @@ class CurrencyServiceTest {
 
     @Test
     void updateCurrency_ReturnsUpdatedCurrency() {
-        String currencyId = "1";
+        String code = "USD";
         CurrencyNode updatedCurrency = new CurrencyNode("USD", "US Dollar", "$");
-        when(currencyRepository.findById(currencyId)).thenReturn(Mono.just(
+        when(currencyRepository.findById(code)).thenReturn(Mono.just(
                 new CurrencyNode("USD", "Euro", "€")
         ));
         when(currencyRepository.save(any(CurrencyNode.class))).thenReturn(Mono.just(
                 updatedCurrency
         ));
 
-        Mono<CurrencyNode> result = currencyService.updateCurrency(currencyId, updatedCurrency);
+        Mono<CurrencyNode> result = currencyService.updateCurrency(code, updatedCurrency);
 
         StepVerifier.create(result)
                 .expectNext(updatedCurrency)
@@ -99,10 +99,10 @@ class CurrencyServiceTest {
 
     @Test
     void deleteCurrency_DeletesCurrency() {
-        String currencyId = "1";
-        when(currencyRepository.deleteById(currencyId)).thenReturn(Mono.empty());
+        String code = "USD";
+        when(currencyRepository.deleteById(code)).thenReturn(Mono.empty());
 
-        Mono<Void> result = currencyService.deleteCurrency(currencyId);
+        Mono<Void> result = currencyService.deleteCurrency(code);
 
         StepVerifier.create(result)
                 .verifyComplete();
