@@ -2,6 +2,7 @@ package com.jds.neo4j.reactive.service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
+import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
 import com.jds.neo4j.reactive.model.TickerProto;
 import com.jds.neo4j.reactive.model.TradeProto.Trade;
@@ -115,9 +116,13 @@ public class TradeServiceImpl implements TradeService {
     public TradeNode convertToNode(Trade trade) {
         log.debug("Converting trade to node: {}", trade);
 
-        // Create a new TradeNode from the trade information
+        // Create a new TickerNode from the TickerProto.Ticker
+        TickerProto.Ticker tickerProto = trade.getTicker();
+        TickerNode tickerNode = new TickerNode(tickerProto);
+
+        // Create a new TradeNode using the TickerNode and other trade information
         return new TradeNode(
-                trade.getTicker(),
+                tickerNode,
                 trade.getPrice(),
                 trade.getQuantity(),
                 trade.getSide(),

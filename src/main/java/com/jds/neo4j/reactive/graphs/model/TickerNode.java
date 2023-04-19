@@ -22,7 +22,7 @@ public class TickerNode {
     private String symbol;
     private String name;
 
-    @Relationship(type = "ON_EXCHANGE", direction = Relationship.Direction.INCOMING)
+    @Relationship(type = "LISTED_ON", direction = Relationship.Direction.OUTGOING)
     @EqualsAndHashCode.Include
     private ExchangeNode exchange;
 
