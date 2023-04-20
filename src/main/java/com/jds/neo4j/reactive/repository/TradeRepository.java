@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @Repository
-public interface TradeRepository extends ReactiveNeo4jRepository<TradeNode, Long> {
+public interface TradeRepository extends BaseRepository<TradeNode, Long>, ReactiveNeo4jRepository<TradeNode, Long> {
 
     @Query("MATCH (t:Trade)-[:HAS_TICKER]->(ticker:Ticker) WHERE ticker.symbol = $symbol RETURN t, ticker")
     Flux<TradeNode> findBySymbol(String symbol);

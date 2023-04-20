@@ -37,7 +37,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         // Create a new ExchangeNode from the exchange information
         ExchangeNode exchangeNode = getExchangeNodeFromProto(Exchange.parseFrom(exchangeJson.getBytes()));
 
-        return exchangeRepository.save(exchangeNode);
+        return exchangeRepository.saveWithRetry(exchangeNode);
     }
 
     @Override

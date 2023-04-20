@@ -81,7 +81,7 @@ public class GenerateSamples {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        currencyRepository.saveAll(currencies).subscribe();
+        currencyRepository.saveAllWithRetry(currencies).subscribe();
     }
 
     private void generateTickerJSONs() {

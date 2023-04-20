@@ -29,7 +29,7 @@ public class ETFServiceImpl implements ETFService {
     @Override
     public Mono<ETFNode> createETF(ETFNode etfNode) {
         log.debug("Creating ETF: {}", etfNode);
-        return etfRepository.save(etfNode);
+        return etfRepository.saveWithRetry(etfNode);
     }
 
     @Override
@@ -49,10 +49,5 @@ public class ETFServiceImpl implements ETFService {
         log.debug("Deleting ETF with symbol: {}", symbol);
         return etfRepository.deleteById(symbol);
     }
-
-//    @Override
-//    public ETFNode convertToNode(ETFProto.ETF etf) {
-//        return new ETFNode(etf);
-//    }
 
 }

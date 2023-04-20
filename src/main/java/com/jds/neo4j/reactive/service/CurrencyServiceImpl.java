@@ -30,7 +30,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public Mono<CurrencyNode> createCurrency(CurrencyNode currencyNode) {
         log.debug("Creating currency: {}", currencyNode);
-        return currencyRepository.save(currencyNode);
+        return currencyRepository.saveWithRetry(currencyNode);
     }
 
     @Override

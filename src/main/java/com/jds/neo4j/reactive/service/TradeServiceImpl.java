@@ -62,7 +62,7 @@ public class TradeServiceImpl implements TradeService {
         // Convert the Trade message to a TradeNode object
         TradeNode tradeNode = convertToNode(tradeProto);
 
-        return tradeRepository.save(tradeNode);
+        return tradeRepository.saveWithRetry(tradeNode);
     }
 
     @Override

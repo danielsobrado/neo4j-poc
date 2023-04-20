@@ -5,6 +5,6 @@ import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TickerRepository extends ReactiveNeo4jRepository<TickerNode, String> {
+public interface TickerRepository extends BaseRepository<TickerNode, String>, ReactiveNeo4jRepository<TickerNode, String> {
 
 }

@@ -29,7 +29,7 @@ public class SpinoffServiceImpl implements SpinoffService {
     @Override
     public Mono<SpinoffNode> createSpinoff(SpinoffNode spinoffNode) {
         log.debug("Creating spinoff: {}", spinoffNode);
-        return spinoffRepository.save(spinoffNode);
+        return spinoffRepository.saveWithRetry(spinoffNode);
     }
 
     @Override

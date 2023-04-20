@@ -126,7 +126,7 @@ public class TickerServiceImpl implements TickerService {
                     existing.setTimestamp(tickerBuilder.getTimestamp());
                     return existing;
                 })
-                .flatMap(tickerRepository::save);
+                .flatMap(tickerRepository::saveWithRetry);
     }
 
     @Override

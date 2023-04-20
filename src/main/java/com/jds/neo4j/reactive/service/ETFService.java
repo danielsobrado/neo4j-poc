@@ -15,7 +15,4 @@ public interface ETFService {
 
     Mono<Void> deleteETF(String symbol);
 
-//    ETFNode convertToNode(ETF etf);
-
-//    ETF convertToProto(ETFNode etfNode);
 }

@@ -31,7 +31,7 @@ public class IndexServiceImpl implements IndexService {
     @Override
     public Mono<IndexNode> createIndex(IndexNode indexNode) {
         log.debug("Creating index: {}", indexNode);
-        return indexRepository.save(indexNode);
+        return indexRepository.saveWithRetry(indexNode);
     }
 
     @Override
@@ -51,10 +51,5 @@ public class IndexServiceImpl implements IndexService {
         log.debug("Deleting index with symbol: {}", symbol);
         return indexRepository.deleteById(symbol);
     }
-
-//    @Override
-//    public IndexNode convertToNode(Index index) {
-//        return new IndexNode(index);
-//    }
 
 }

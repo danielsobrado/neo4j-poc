@@ -30,7 +30,7 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public Mono<PriceNode> createPrice(PriceNode price) {
         log.debug("Creating price: {}", price);
-        return priceRepository.save(price);
+        return priceRepository.saveWithRetry(price);
     }
 
     @Override

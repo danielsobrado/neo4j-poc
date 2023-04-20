@@ -5,5 +5,5 @@ import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PriceRepository extends ReactiveNeo4jRepository<PriceNode, Long> {
+public interface PriceRepository extends BaseRepository<PriceNode, Long>, ReactiveNeo4jRepository<PriceNode, Long> {
 }
