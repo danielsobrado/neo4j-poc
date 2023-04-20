@@ -20,7 +20,7 @@ Each service is implemented using Java 17 and Spring Boot, and uses Swagger for 
 
 You can use [chcolatey](https://community.chocolatey.org/) to install the following if you are using windows:
 
-- Java 19 (`choco install openjdk`)
+- Java 17 (`choco install openjdk`)
 - Docker (`choco install docker-desktop`)
 - Gradle (`choco install protoc`)
 - Protoc (`choco install gradle`)
