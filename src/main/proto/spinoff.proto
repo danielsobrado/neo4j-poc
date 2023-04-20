@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "SpinoffProto";
+
+import "ticker.proto";
+
+message Spinoff {
+  Ticker parent_ticker = 1;
+  Ticker spinoff_ticker = 2;
+  int64 effective_date = 3;
+}

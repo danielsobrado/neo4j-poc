@@ -42,3 +42,6 @@ out/
 *.db
 *.log
 /neo4j/data/databases/**
+/neo4j/
+/neo4j/data/
+/neo4j/logs/

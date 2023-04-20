@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.jds.neo4j.reactive.model;
+option java_package = "com.jds.neo4j.reactive.model";
+option java_outer_classname = "ETFProto";
+
+import "ticker.proto";
+
+message ETFComponent {
+  Ticker ticker = 1;
+  double weight = 2;
+}
+
+message ETF {
+  string symbol = 1;
+  string name = 2;
+  repeated ETFComponent components = 3;
+}
