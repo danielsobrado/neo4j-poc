@@ -42,4 +42,16 @@ public class PriceNode {
     private ExchangeNode exchange;
     @NonNull
     private Long timestamp;
+
+    public PriceNode(TickerNode tickerNode, double open, double high, double low, double close, double volume, CurrencyNode currency, ExchangeNode exchangeNode, long currentTimeMillis) {
+        this.ticker = tickerNode;
+        this.open = open;
+        this.high = high;
+        this.low = low;
+        this.close = close;
+        this.volume = volume;
+        this.currency = currency;
+        this.exchange = exchangeNode;
+        this.timestamp = currentTimeMillis;
+    }
 }

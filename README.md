@@ -181,6 +181,14 @@ Or you can always do something like this:
         String tickerJson=JsonFormat.printer().print(ticker);
 ```
 
+Visit your local Neo4J on: http://localhost:7474/browser/ (neo4j/neo4j1234 as per `application.properties`)
+
+Pull all nodes from the database:
+
+```cypher
+MATCH (n) RETURN n
+```
+
 ## Contributing
 
 If you'd like to contribute to this project, please feel free to submit a pull request.
