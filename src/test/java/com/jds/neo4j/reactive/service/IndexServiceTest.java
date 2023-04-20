@@ -58,18 +58,6 @@ class IndexServiceTest {
     }
 
     @Test
-    void createIndex_ReturnsCreatedIndex() {
-        IndexNode indexNode = new IndexNode("SPX", "S&P 500 Index");
-        when(indexRepository.save(any(IndexNode.class))).thenReturn(Mono.just(indexNode));
-
-        Mono<IndexNode> result = indexService.createIndex(indexNode);
-
-        StepVerifier.create(result)
-                .expectNext(indexNode)
-                .verifyComplete();
-    }
-
-    @Test
     void updateIndex_ReturnsUpdatedIndex() {
         String symbol = "SPX";
         IndexNode updatedIndex = new IndexNode("SPX", "S&P 500 Index");

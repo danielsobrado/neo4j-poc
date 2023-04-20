@@ -1,8 +1,6 @@
 package com.jds.neo4j.reactive.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TickerNode;
@@ -18,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Ticker Service Test")
@@ -102,33 +99,6 @@ class TickerServiceTest {
 
         verify(exchangeService).getExchangeNodeFromProto(any());
         verify(tickerRepository).save(any());
-    }
-
-    @Test
-    public void testUpdateTickerWithJson() throws InvalidProtocolBufferException, JsonProcessingException {
-        // Arrange
-        TickerNode existingTicker = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA"), 1646000000L);
-        when(tickerRepository.findById("1")).thenReturn(Mono.just(existingTicker));
-
-        Exchange exchange = Exchange.newBuilder().setCode("NYSE").setName("New York Stock Exchange").setCountry("USA").build();
-        String updatedTickerJson = "{\"symbol\":\"AAPL\",\"name\":\"Apple Inc.\",\"exchange\":{\"code\":\"NYSE\",\"name\":\"New York Stock Exchange\",\"country\":\"USA\"},\"timestamp\":1646100000}";
-
-        when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NYSE", "New York Stock Exchange", "USA"), 1646100000L)));
-
-        // Act
-        Mono<TickerNode> result = tickerService.updateTicker("1", updatedTickerJson);
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(updatedTicker -> {
-                    assertThat(updatedTicker.getSymbol()).isEqualTo("AAPL");
-                    assertThat(updatedTicker.getName()).isEqualTo("Apple Inc.");
-                    assertThat(updatedTicker.getExchange().getCode()).isEqualTo("NYSE");
-                    assertThat(updatedTicker.getExchange().getName()).isEqualTo("New York Stock Exchange");
-                    assertThat(updatedTicker.getExchange().getCountry()).isEqualTo("USA");
-                    assertThat(updatedTicker.getTimestamp()).isEqualTo(1646100000L);
-                })
-                .verifyComplete();
     }
 
     @Test

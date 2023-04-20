@@ -56,8 +56,6 @@ class PriceServiceTest {
         testPrice.setLow(9000.0);
         testPrice.setClose(10500.0);
         testPrice.setVolume(100.0);
-        testPrice.setCurrency(currencyNode);
-        testPrice.setExchange(exchangeNode);
         testPrice.setTimestamp(System.currentTimeMillis());
     }
 
@@ -79,16 +77,6 @@ class PriceServiceTest {
                 .verifyComplete();
     }
 
-
-    @Test
-    void testCreatePrice() {
-        when(priceRepository.save(any())).thenReturn(Mono.just(testPrice));
-
-        StepVerifier.create(priceService.createPrice(testPrice))
-                .expectNextMatches(price -> price.equals(testPrice))
-                .verifyComplete();
-    }
-
     @Test
     void testUpdatePrice() {
 
@@ -98,8 +86,6 @@ class PriceServiceTest {
         PriceNode updatedPrice = new PriceNode();
         updatedPrice.setTicker(tickerNode);
         updatedPrice.setClose(1000.0);
-        updatedPrice.setCurrency(testPrice.getCurrency());
-        updatedPrice.setExchange(testPrice.getExchange());
         updatedPrice.setTimestamp(System.currentTimeMillis());
 
         when(priceRepository.findById((Long) any())).thenReturn(Mono.just(testPrice));

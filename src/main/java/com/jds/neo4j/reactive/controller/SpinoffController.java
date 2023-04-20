@@ -1,6 +1,6 @@
 package com.jds.neo4j.reactive.controller;
 
-import com.jds.neo4j.reactive.graphs.model.SpinoffNode;
+import com.jds.neo4j.reactive.graphs.model.Spinoff;
 import com.jds.neo4j.reactive.service.SpinoffServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,34 +17,34 @@ public class SpinoffController {
     private final SpinoffServiceImpl spinoffService;
 
     @GetMapping
-    public Flux<SpinoffNode> getAllSpinoffs() {
+    public Flux<Spinoff> getAllSpinoffs() {
         log.debug("Getting all spinoffs");
         return spinoffService.getAllSpinoffs();
     }
 
-    @GetMapping("/{symbol}")
-    public Mono<SpinoffNode> getSpinoffBySymbol(@PathVariable("symbol") String symbol) {
-        log.debug("Getting spinoff by symbol: {}", symbol);
-        return spinoffService.getSpinoffById(symbol);
+    @GetMapping("/{id}")
+    public Mono<Spinoff> getSpinoffById(@PathVariable("id") Long id) {
+        log.debug("Getting spinoff by id: {}", id);
+        return spinoffService.getSpinoffById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<SpinoffNode> createSpinoff(@RequestBody SpinoffNode spinoffNode) {
-        log.debug("Creating spinoff: {}", spinoffNode);
-        return spinoffService.createSpinoff(spinoffNode);
+    public Mono<Spinoff> createSpinoff(@RequestBody Spinoff spinoff) {
+        log.debug("Creating spinoff: {}", spinoff);
+        return spinoffService.createSpinoff(spinoff);
     }
 
-    @PutMapping("/{symbol}")
-    public Mono<SpinoffNode> updateSpinoff(@PathVariable("symbol") String symbol, @RequestBody SpinoffNode spinoffNode) {
-        log.debug("Updating spinoff with symbol: {}, data: {}", symbol, spinoffNode);
-        return spinoffService.updateSpinoff(symbol, spinoffNode);
+    @PutMapping("/{id}")
+    public Mono<Spinoff> updateSpinoff(@PathVariable("id") Long id, @RequestBody Spinoff spinoff) {
+        log.debug("Updating spinoff with id: {}, data: {}", id, spinoff);
+        return spinoffService.updateSpinoff(id, spinoff);
     }
 
-    @DeleteMapping("/{symbol}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteSpinoff(@PathVariable("symbol") String symbol) {
-        log.debug("Deleting spinoff with symbol: {}", symbol);
-        return spinoffService.deleteSpinoff(symbol);
+    public Mono<Void> deleteSpinoff(@PathVariable("id") Long id) {
+        log.debug("Deleting spinoff with id: {}", id);
+        return spinoffService.deleteSpinoff(id);
     }
 }

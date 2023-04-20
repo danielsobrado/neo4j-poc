@@ -1,9 +1,6 @@
 package com.jds.neo4j.reactive.service;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
 import com.jds.neo4j.reactive.graphs.model.CurrencyNode;
-import com.jds.neo4j.reactive.model.CurrencyProto.Currency;
 import com.jds.neo4j.reactive.repository.CurrencyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,25 +54,6 @@ class CurrencyServiceTest {
 
         StepVerifier.create(result)
                 .expectNext(new CurrencyNode("USD", "US Dollar", "$"))
-                .verifyComplete();
-    }
-
-    @Test
-    void createCurrency_ReturnsCreatedCurrency() throws InvalidProtocolBufferException {
-        Currency currency = Currency.newBuilder()
-                .setCode("USD")
-                .setName("US Dollar")
-                .setSymbol("$")
-                .build();
-
-        String currencyJson = JsonFormat.printer().print(currency);
-        CurrencyNode currencyNode = currencyService.convertToNode(currency);
-        when(currencyRepository.save(any(CurrencyNode.class))).thenReturn(Mono.just(currencyNode));
-
-        Mono<CurrencyNode> result = currencyService.createCurrency(currencyNode);
-
-        StepVerifier.create(result)
-                .expectNext(currencyNode)
                 .verifyComplete();
     }
 

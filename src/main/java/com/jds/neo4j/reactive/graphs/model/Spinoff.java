@@ -1,9 +1,9 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 
 import java.time.LocalDate;
 
@@ -14,25 +14,21 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Node("Spinoff")
-public class SpinoffNode {
-    @EqualsAndHashCode.Include
-    @NonNull
+@RelationshipProperties
+public class Spinoff {
     @Id
-    private String id;
+    @GeneratedValue
+    private Long internalId;
 
-    @Relationship(type = "PARENT", direction = Relationship.Direction.OUTGOING)
     @EqualsAndHashCode.Include
     private TickerNode parentTicker;
 
-    @Relationship(type = "SPINOFF", direction = Relationship.Direction.OUTGOING)
     private TickerNode spinoffTicker;
 
     @NonNull
     private Long effective_date;
 
-    public SpinoffNode(String id, String parentOld, String spinoffOld, LocalDate effectiveDate) {
-        this.id = id;
+    public Spinoff(String parentOld, String spinoffOld, LocalDate effectiveDate) {
         this.parentTicker = new TickerNode(parentOld);
         this.spinoffTicker = new TickerNode(spinoffOld);
         this.effective_date = effectiveDate.toEpochDay();

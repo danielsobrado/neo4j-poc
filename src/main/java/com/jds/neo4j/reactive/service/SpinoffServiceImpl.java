@@ -1,6 +1,6 @@
 package com.jds.neo4j.reactive.service;
 
-import com.jds.neo4j.reactive.graphs.model.SpinoffNode;
+import com.jds.neo4j.reactive.graphs.model.Spinoff;
 import com.jds.neo4j.reactive.repository.SpinoffRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,25 +15,25 @@ public class SpinoffServiceImpl implements SpinoffService {
     private final SpinoffRepository spinoffRepository;
 
     @Override
-    public Flux<SpinoffNode> getAllSpinoffs() {
+    public Flux<Spinoff> getAllSpinoffs() {
         log.debug("Getting all spinoffs");
         return spinoffRepository.findAll();
     }
 
     @Override
-    public Mono<SpinoffNode> getSpinoffById(String id) {
+    public Mono<Spinoff> getSpinoffById(Long id) {
         log.debug("Getting spinoff by id: {}", id);
         return spinoffRepository.findById(id);
     }
 
     @Override
-    public Mono<SpinoffNode> createSpinoff(SpinoffNode spinoffNode) {
+    public Mono<Spinoff> createSpinoff(Spinoff spinoffNode) {
         log.debug("Creating spinoff: {}", spinoffNode);
         return spinoffRepository.saveWithRetry(spinoffNode);
     }
 
     @Override
-    public Mono<SpinoffNode> updateSpinoff(String id, SpinoffNode spinoffNode) {
+    public Mono<Spinoff> updateSpinoff(Long id, Spinoff spinoffNode) {
         log.debug("Updating spinoff with id: {}, data: {}", id, spinoffNode);
         return spinoffRepository.findById(id)
                 .map(existing -> {
@@ -46,14 +46,9 @@ public class SpinoffServiceImpl implements SpinoffService {
     }
 
     @Override
-    public Mono<Void> deleteSpinoff(String id) {
+    public Mono<Void> deleteSpinoff(Long id) {
         log.debug("Deleting spinoff with id: {}", id);
         return spinoffRepository.deleteById(id);
     }
-
-//    @Override
-//    public SpinoffNode convertToNode(Spinoff spinoff) {
-//        return new SpinoffNode(spinoff);
-//    }
 
 }

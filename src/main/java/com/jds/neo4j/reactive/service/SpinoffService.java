@@ -1,20 +1,17 @@
 package com.jds.neo4j.reactive.service;
 
-import com.jds.neo4j.reactive.graphs.model.SpinoffNode;
+import com.jds.neo4j.reactive.graphs.model.Spinoff;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface SpinoffService {
-    Flux<SpinoffNode> getAllSpinoffs();
+    Flux<Spinoff> getAllSpinoffs();
 
-    Mono<SpinoffNode> getSpinoffById(String id);
+    Mono<Spinoff> getSpinoffById(Long id);
 
-    Mono<SpinoffNode> createSpinoff(SpinoffNode spinoffNode);
+    Mono<Spinoff> createSpinoff(Spinoff spinoff);
 
-    Mono<SpinoffNode> updateSpinoff(String id, SpinoffNode spinoffNode);
+    Mono<Spinoff> updateSpinoff(Long id, Spinoff spinoff);
 
-    Mono<Void> deleteSpinoff(String id);
-
-//    SpinoffNode corenvertToNode(SpinoffProto.Spinoff spinoff);
-
+    Mono<Void> deleteSpinoff(Long id);
 }

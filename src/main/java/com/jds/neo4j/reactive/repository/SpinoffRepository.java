@@ -1,7 +1,9 @@
 package com.jds.neo4j.reactive.repository;
 
-import com.jds.neo4j.reactive.graphs.model.SpinoffNode;
+import com.jds.neo4j.reactive.graphs.model.Spinoff;
 import org.springframework.data.neo4j.repository.ReactiveNeo4jRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SpinoffRepository extends BaseRepository<SpinoffNode, String>, ReactiveNeo4jRepository<SpinoffNode, String> {
+@Repository
+public interface SpinoffRepository extends ReactiveNeo4jRepository<Spinoff, Long>, BaseRepository<Spinoff, Long> {
 }

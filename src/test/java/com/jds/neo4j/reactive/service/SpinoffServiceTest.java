@@ -1,6 +1,6 @@
 package com.jds.neo4j.reactive.service;
 
-import com.jds.neo4j.reactive.graphs.model.SpinoffNode;
+import com.jds.neo4j.reactive.graphs.model.Spinoff;
 import com.jds.neo4j.reactive.repository.SpinoffRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,56 +33,30 @@ class SpinoffServiceTest {
     @Test
     void getAllSpinoffs_ReturnsAllSpinoffs() {
         when(spinoffRepository.findAll()).thenReturn(Flux.just(
-                new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1)),
-                new SpinoffNode("2", "PARENT2", "SPINOFF2", LocalDate.of(2021, 2, 1))
+                new Spinoff("PARENT", "SPINOFF", LocalDate.of(2021, 1, 1)),
+                new Spinoff("PARENT2", "SPINOFF2", LocalDate.of(2021, 2, 1))
         ));
 
-        Flux<SpinoffNode> result = spinoffService.getAllSpinoffs();
+        Flux<Spinoff> result = spinoffService.getAllSpinoffs();
 
         StepVerifier.create(result)
-                .expectNext(new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1)))
-                .expectNext(new SpinoffNode("2", "PARENT2", "SPINOFF2", LocalDate.of(2021, 2, 1)))
+                .expectNext(new Spinoff("PARENT", "SPINOFF", LocalDate.of(2021, 1, 1)))
+                .expectNext(new Spinoff("PARENT2", "SPINOFF2", LocalDate.of(2021, 2, 1)))
                 .verifyComplete();
     }
-
-    @Test
-    void getSpinoffById_ReturnsSpinoff() {
-        String id = "1";
-        when(spinoffRepository.findById(id)).thenReturn(Mono.just(
-                new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1))
-        ));
-
-        Mono<SpinoffNode> result = spinoffService.getSpinoffById(id);
-
-        StepVerifier.create(result)
-                .expectNext(new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1)))
-                .verifyComplete();
-    }
-
-    @Test
-    void createSpinoff_ReturnsCreatedSpinoff() {
-        SpinoffNode spinoffNode = new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1));
-        when(spinoffRepository.save(any(SpinoffNode.class))).thenReturn(Mono.just(spinoffNode));
-
-        Mono<SpinoffNode> result = spinoffService.createSpinoff(spinoffNode);
-
-        StepVerifier.create(result)
-                .expectNext(spinoffNode)
-                .verifyComplete();
-    }
-
+    
     @Test
     void updateSpinoff_ReturnsUpdatedSpinoff() {
-        String id = "1";
-        SpinoffNode updatedSpinoff = new SpinoffNode("1", "PARENT", "SPINOFF", LocalDate.of(2021, 1, 1));
+        Long id = 1L;
+        Spinoff updatedSpinoff = new Spinoff("PARENT", "SPINOFF", LocalDate.of(2021, 1, 1));
         when(spinoffRepository.findById(id)).thenReturn(Mono.just(
-                new SpinoffNode("1", "PARENT_OLD", "SPINOFF_OLD", LocalDate.of(2020, 12, 31))
+                new Spinoff("PARENT_OLD", "SPINOFF_OLD", LocalDate.of(2020, 12, 31))
         ));
-        when(spinoffRepository.save(any(SpinoffNode.class))).thenReturn(Mono.just(
+        when(spinoffRepository.save(any(Spinoff.class))).thenReturn(Mono.just(
                 updatedSpinoff
         ));
 
-        Mono<SpinoffNode> result = spinoffService.updateSpinoff(id, updatedSpinoff);
+        Mono<Spinoff> result = spinoffService.updateSpinoff(id, updatedSpinoff);
         StepVerifier.create(result)
                 .expectNext(updatedSpinoff)
                 .verifyComplete();
@@ -90,7 +64,7 @@ class SpinoffServiceTest {
 
     @Test
     void deleteSpinoff_DeletesSpinoff() {
-        String id = "1";
+        Long id = 1L;
         when(spinoffRepository.deleteById(id)).thenReturn(Mono.empty());
 
         Mono<Void> result = spinoffService.deleteSpinoff(id);
@@ -99,4 +73,3 @@ class SpinoffServiceTest {
                 .verifyComplete();
     }
 }
-

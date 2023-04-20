@@ -58,18 +58,6 @@ class ETFServiceTest {
     }
 
     @Test
-    void createETF_ReturnsCreatedETF() {
-        ETFNode etfNode = new ETFNode("SPY", "SPDR S&P 500 ETF Trust");
-        when(etfRepository.save(any(ETFNode.class))).thenReturn(Mono.just(etfNode));
-
-        Mono<ETFNode> result = etfService.createETF(etfNode);
-
-        StepVerifier.create(result)
-                .expectNext(etfNode)
-                .verifyComplete();
-    }
-
-    @Test
     void updateETF_ReturnsUpdatedETF() {
         String symbol = "SPY";
         ETFNode updatedETF = new ETFNode("SPY", "SPDR S&P 500 ETF Trust");

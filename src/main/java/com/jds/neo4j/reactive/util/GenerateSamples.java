@@ -171,9 +171,9 @@ public class GenerateSamples {
 
 
     private void generateSpinoffJSONs() {
-        List<SpinoffNode> spinoffs = new ArrayList<>();
+        List<Spinoff> spinoffs = new ArrayList<>();
 
-        SpinoffNode spinoff1 = new SpinoffNode("1", "PARENT1", "SPINOFF1", LocalDate.of(2023, 1, 1));
+        Spinoff spinoff1 = new Spinoff("PARENT1", "SPINOFF1", LocalDate.of(2023, 1, 1));
         spinoffs.add(spinoff1);
 
         spinoffRepository.saveAll(spinoffs).subscribe();
