@@ -36,7 +36,10 @@ public class TickerNode {
         this.timestamp = ticker.getTimestamp();
     }
 
-    public TickerNode(String aapl) {
+    public TickerNode(String aapl, String name, String exchange, Long timestamp) {
         this.symbol = aapl;
+        this.name = name;
+        this.exchange = new ExchangeNode(exchange);
+        this.timestamp = timestamp;
     }
 }

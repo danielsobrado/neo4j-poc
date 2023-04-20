@@ -46,7 +46,7 @@ public class TradeServiceTest {
 
     @Test
     public void testGetAllTrades() {
-        TickerNode tickerNode = new TickerNode("AAPL");
+        TickerNode tickerNode = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA"), System.currentTimeMillis());
         ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
         TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
 
@@ -67,7 +67,7 @@ public class TradeServiceTest {
     public void testGetTradeById() {
         Long id = 1L;
 
-        TickerNode tickerNode = new TickerNode("AAPL");
+        TickerNode tickerNode = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA"), System.currentTimeMillis());
         ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
         TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
         tradeNode.setId(id);
@@ -89,7 +89,7 @@ public class TradeServiceTest {
     public void testUpdateTrade() {
         Long id = 1L;
 
-        TickerNode tickerNode = new TickerNode("AAPL");
+        TickerNode tickerNode = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA"), System.currentTimeMillis());
         ExchangeNode exchangeNode = new ExchangeNode("NASDAQ", "NASDAQ Stock Exchange", "USA");
         TradeNode tradeNode = new TradeNode(tickerNode, 100.0, 10L, Side.BUY, exchangeNode, System.currentTimeMillis());
         tradeNode.setId(id);

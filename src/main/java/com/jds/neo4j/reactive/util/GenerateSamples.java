@@ -7,7 +7,6 @@ import com.jds.neo4j.reactive.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -172,17 +171,18 @@ public class GenerateSamples {
 
     private void generateSpinoffJSONs() {
         List<Spinoff> spinoffs = new ArrayList<>();
-
-        Spinoff spinoff1 = new Spinoff("PARENT1", "SPINOFF1", LocalDate.of(2023, 1, 1));
+        
+        Spinoff spinoff1 = new Spinoff(new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis()), new TickerNode("APPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis()), System.currentTimeMillis());
         spinoffs.add(spinoff1);
 
         spinoffRepository.saveAll(spinoffs).subscribe();
     }
 
+
     private void generateTradeJSONs() {
         List<TradeNode> trades = new ArrayList<>();
 
-        TickerNode ticker1 = new TickerNode("AAPL");
+        TickerNode ticker1 = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis());
         TradeNode trade1 = new TradeNode(ticker1, 120.0, 100L, TradeProto.Side.BUY, System.currentTimeMillis());
         trades.add(trade1);
 
