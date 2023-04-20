@@ -1,5 +1,6 @@
 package com.jds.neo4j.reactive.graphs.model;
 
+import com.jds.neo4j.reactive.model.ETFProto;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -25,4 +26,8 @@ public class ETFNode {
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
     private List<ETFComponentNode> components;
 
+    public ETFNode(ETFProto.ETF etf) {
+        this.symbol = etf.getSymbol();
+        this.name = etf.getName();
+    }
 }

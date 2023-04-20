@@ -27,5 +27,4 @@ public class ETFComponentNode {
 
     @NonNull
     private Double weight;
-    
 }

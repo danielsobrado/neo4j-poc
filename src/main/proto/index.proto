@@ -2,17 +2,17 @@ syntax = "proto3";
 
 package com.jds.neo4j.reactive.model;
 option java_package = "com.jds.neo4j.reactive.model";
-option java_outer_classname = "ETFProto";
+option java_outer_classname = "IndexProto";
 
 import "ticker.proto";
 
-message ETFComponent {
+message IndexComponent {
   Ticker ticker = 1;
   double weight = 2;
 }
 
-message ETF {
+message Index {
   string symbol = 1;
   string name = 2;
-  repeated ETFComponent components = 3;
+  repeated IndexComponent components = 3;
 }
