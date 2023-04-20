@@ -30,4 +30,9 @@ public class ETFNode {
         this.symbol = etf.getSymbol();
         this.name = etf.getName();
     }
+
+    public ETFNode(String symbol, String name) {
+        this.symbol = symbol;
+        this.name = name;
+    }
 }

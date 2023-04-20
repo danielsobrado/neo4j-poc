@@ -25,4 +25,8 @@ public class IndexNode {
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
     private List<IndexComponentNode> components;
 
+    public IndexNode(String symbol, String name) {
+        this.symbol = symbol;
+        this.name = name;
+    }
 }

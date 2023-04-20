@@ -37,8 +37,8 @@ public class SpinoffServiceImpl implements SpinoffService {
         log.debug("Updating spinoff with id: {}, data: {}", id, spinoffNode);
         return spinoffRepository.findById(id)
                 .map(existing -> {
-                    existing.setParent_ticker(spinoffNode.getParent_ticker());
-                    existing.setSpinoff_ticker(spinoffNode.getSpinoff_ticker());
+                    existing.setParentTicker(spinoffNode.getParentTicker());
+                    existing.setSpinoffTicker(spinoffNode.getSpinoffTicker());
                     existing.setEffective_date(spinoffNode.getEffective_date());
                     return existing;
                 })

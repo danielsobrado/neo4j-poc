@@ -47,7 +47,7 @@ dependencies {
     implementation("org.projectlombok:lombok")
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
     implementation("com.google.protobuf:protobuf-java-util:$protobufVersion")
-    implementation("io.projectreactor:reactor-core:$reactorVersion") // Add this line if you're using Reactor
+    implementation("io.projectreactor:reactor-core:$reactorVersion")
     implementation("javax.annotation:javax.annotation-api:$javaxAnnotationVersion")
     implementation("com.google.protobuf:protobuf-gradle-plugin:$protobufGradlePluginVersion")
     implementation("org.neo4j.test:neo4j-harness:$neo4jHarnessVersion")

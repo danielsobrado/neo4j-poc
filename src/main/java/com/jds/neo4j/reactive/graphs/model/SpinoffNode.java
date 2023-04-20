@@ -5,6 +5,8 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,12 +23,18 @@ public class SpinoffNode {
 
     @Relationship(type = "PARENT", direction = Relationship.Direction.OUTGOING)
     @EqualsAndHashCode.Include
-    private TickerNode parent_ticker;
+    private TickerNode parentTicker;
 
     @Relationship(type = "SPINOFF", direction = Relationship.Direction.OUTGOING)
-    private TickerNode spinoff_ticker;
+    private TickerNode spinoffTicker;
 
     @NonNull
     private Long effective_date;
 
+    public SpinoffNode(String id, String parentOld, String spinoffOld, LocalDate effectiveDate) {
+        this.id = id;
+        this.parentTicker = new TickerNode(parentOld);
+        this.spinoffTicker = new TickerNode(spinoffOld);
+        this.effective_date = effectiveDate.toEpochDay();
+    }
 }
