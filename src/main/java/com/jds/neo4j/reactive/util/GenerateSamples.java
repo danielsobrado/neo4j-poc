@@ -114,7 +114,7 @@ public class GenerateSamples {
         ExchangeNode nasdaq = new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA");
         TickerNode aapl = new TickerNode("AAPL", "Apple Inc.", nasdaq, System.currentTimeMillis());
 
-        prices.add(new PriceNode(aapl, 145.0, 147.0, 144.0, 146.0, 12000000.0, usd, nasdaq, System.currentTimeMillis()));
+        prices.add(new PriceNode(aapl, 145.0, 147.0, 144.0, 146.0, 12000000.0, System.currentTimeMillis()));
 
         priceRepository.saveAll(prices).subscribe();
     }
@@ -137,15 +137,12 @@ public class GenerateSamples {
         TickerNode msft = new TickerNode("MSFT", "Microsoft Corporation", nasdaq, System.currentTimeMillis());
         TickerNode amzn = new TickerNode("AMZN", "Amazon.com, Inc.", nasdaq, System.currentTimeMillis());
 
-        ETFComponentNode component1 = new ETFComponentNode("1", null, aapl, 0.45);
-        ETFComponentNode component2 = new ETFComponentNode("2", null, msft, 0.3);
-        ETFComponentNode component3 = new ETFComponentNode("3", null, amzn, 0.25);
+        ETFComponent component1 = new ETFComponent(aapl, 0.45);
+        ETFComponent component2 = new ETFComponent(msft, 0.3);
+        ETFComponent component3 = new ETFComponent(amzn, 0.25);
 
         ETFNode etf1 = new ETFNode("ETFX", "Sample ETF");
         etf1.setComponents(Arrays.asList(component1, component2, component3));
-        component1.setEtf(etf1);
-        component2.setEtf(etf1);
-        component3.setEtf(etf1);
 
         etfs.add(etf1);
 
@@ -160,20 +157,18 @@ public class GenerateSamples {
         TickerNode msft = new TickerNode("MSFT", "Microsoft Corporation", nasdaq, System.currentTimeMillis());
         TickerNode amzn = new TickerNode("AMZN", "Amazon.com, Inc.", nasdaq, System.currentTimeMillis());
 
-        IndexComponentNode component1 = new IndexComponentNode("1", null, aapl, 0.45);
-        IndexComponentNode component2 = new IndexComponentNode("2", null, msft, 0.3);
-        IndexComponentNode component3 = new IndexComponentNode("3", null, amzn, 0.25);
+        IndexComponent component1 = new IndexComponent(aapl, 0.45);
+        IndexComponent component2 = new IndexComponent(msft, 0.3);
+        IndexComponent component3 = new IndexComponent(amzn, 0.25);
 
         IndexNode index1 = new IndexNode("INDX", "Sample Index");
         index1.setComponents(Arrays.asList(component1, component2, component3));
-        component1.setIndex(index1);
-        component2.setIndex(index1);
-        component3.setIndex(index1);
 
         indices.add(index1);
 
         indexRepository.saveAll(indices).subscribe();
     }
+
 
     private void generateSpinoffJSONs() {
         List<SpinoffNode> spinoffs = new ArrayList<>();

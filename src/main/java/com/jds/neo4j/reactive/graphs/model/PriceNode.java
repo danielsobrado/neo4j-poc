@@ -35,23 +35,18 @@ public class PriceNode {
 
     private Double volume;
 
-    @Relationship(type = "WITH_CURRENCY", direction = Relationship.Direction.INCOMING)
-    private CurrencyNode currency;
+    private String name = "Price";
 
-    @Relationship(type = "LISTED_ON", direction = Relationship.Direction.INCOMING)
-    private ExchangeNode exchange;
     @NonNull
     private Long timestamp;
 
-    public PriceNode(TickerNode tickerNode, double open, double high, double low, double close, double volume, CurrencyNode currency, ExchangeNode exchangeNode, long currentTimeMillis) {
+    public PriceNode(TickerNode tickerNode, double open, double high, double low, double close, double volume, long currentTimeMillis) {
         this.ticker = tickerNode;
         this.open = open;
         this.high = high;
         this.low = low;
         this.close = close;
         this.volume = volume;
-        this.currency = currency;
-        this.exchange = exchangeNode;
         this.timestamp = currentTimeMillis;
     }
 }

@@ -44,8 +44,6 @@ public class PriceServiceImpl implements PriceService {
                     existing.setLow(price.getLow());
                     existing.setClose(price.getClose());
                     existing.setVolume(price.getVolume());
-                    existing.setCurrency(price.getCurrency());
-                    existing.setExchange(price.getExchange());
                     existing.setTimestamp(price.getTimestamp());
                     return existing;
                 })

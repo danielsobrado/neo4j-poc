@@ -20,10 +20,11 @@ public class IndexNode {
     @NonNull
     @Id
     private String symbol;
+    
     private String name;
 
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
-    private List<IndexComponentNode> components;
+    private List<IndexComponent> components;
 
     public IndexNode(String symbol, String name) {
         this.symbol = symbol;

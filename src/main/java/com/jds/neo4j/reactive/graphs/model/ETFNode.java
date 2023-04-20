@@ -24,7 +24,7 @@ public class ETFNode {
     private String name;
 
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
-    private List<ETFComponentNode> components;
+    private List<ETFComponent> components;
 
     public ETFNode(ETFProto.ETF etf) {
         this.symbol = etf.getSymbol();
