@@ -25,6 +25,7 @@ val grpcVersion = "1.45.1"
 val neo4jHarnessVersion = "3.5.12"
 val junitJupiterVersion = "5.8.2"
 val jacocoVersion = "0.8.7"
+val jacksonVersion = "2.13.1"
 
 configurations {
     compileOnly {
@@ -51,6 +52,8 @@ dependencies {
     implementation("javax.annotation:javax.annotation-api:$javaxAnnotationVersion")
     implementation("com.google.protobuf:protobuf-gradle-plugin:$protobufGradlePluginVersion")
     implementation("org.neo4j.test:neo4j-harness:$neo4jHarnessVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+
 
     protobuf(files("proto/"))
 

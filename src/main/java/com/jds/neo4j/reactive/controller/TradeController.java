@@ -1,6 +1,5 @@
 package com.jds.neo4j.reactive.controller;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
 import com.jds.neo4j.reactive.service.TradeServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +30,16 @@ public class TradeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<TradeNode> createTrade(@RequestBody String trade) throws InvalidProtocolBufferException {
+    public Mono<TradeNode> createTrade(@RequestBody String trade) {
         log.debug("Creating trade: {}", trade);
-        return tradeService.createTrade(trade);
+        return tradeService.createTradeFromString(trade);
     }
 
     @PutMapping("/{id}")
-    public Mono<TradeNode> updateTrade(@PathVariable("id") Long id, @RequestBody String trade) throws InvalidProtocolBufferException {
+    public Mono<TradeNode> updateTrade(@PathVariable("id") Long id, @RequestBody String trade) {
         log.debug("Updating trade with id: {}, data: {}", id, trade);
-        return tradeService.updateTrade(id, trade);
+        return tradeService.createTradeFromString(trade)
+                .flatMap(tradeNode -> tradeService.updateTrade(id, tradeNode));
     }
 
     @DeleteMapping("/{id}")

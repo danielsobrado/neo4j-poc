@@ -7,9 +7,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TickerNode;
-import com.jds.neo4j.reactive.model.ExchangeProto;
 import com.jds.neo4j.reactive.model.ExchangeProto.Exchange;
-import com.jds.neo4j.reactive.model.TickerProto;
 import com.jds.neo4j.reactive.model.TickerProto.Ticker;
 import com.jds.neo4j.reactive.repository.TickerRepository;
 import lombok.NonNull;
@@ -30,16 +28,6 @@ public class TickerServiceImpl implements TickerService {
     @NonNull
     private final ExchangeService exchangeService;
     private final ObjectMapper objectMapper;
-
-    static Exchange createExchangeProto(TickerNode tickerNode) {
-
-        // Create a new Exchange message from the ExchangeNode
-        return ExchangeProto.Exchange.newBuilder()
-                .setCode(tickerNode.getExchange().getCode())
-                .setName(tickerNode.getExchange().getName())
-                .setCountry(tickerNode.getExchange().getCountry())
-                .build();
-    }
 
     @Override
     public Flux<TickerNode> getAllTickers() {
@@ -71,19 +59,6 @@ public class TickerServiceImpl implements TickerService {
         ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(exchange);
 
         return tickerRepository.save(new TickerNode(tickerBuilder.getSymbol(), tickerBuilder.getName(), exchangeNode, tickerBuilder.getTimestamp()));
-    }
-
-
-    @Override
-    public Mono<TickerNode> createTicker(Ticker tickerProto) {
-        log.debug("Creating ticker from protobuf message: {}", tickerProto);
-
-        Ticker.Builder tickerBuilder = Ticker.newBuilder();
-
-        ExchangeNode exchangeNode = exchangeService.getExchangeNodeFromProto(tickerBuilder.getExchange());
-
-        TickerNode tickerNode = new TickerNode(tickerProto.getSymbol(), tickerProto.getName(), exchangeNode, tickerProto.getTimestamp());
-        return tickerRepository.save(tickerNode);
     }
 
     @Override
@@ -154,15 +129,10 @@ public class TickerServiceImpl implements TickerService {
     }
 
     @Override
-    public Ticker convertToProto(TickerNode tickerNode) {
-        Exchange exchangeProto = createExchangeProto(tickerNode);
+    public Mono<TickerNode> getTickerBySymbol(String symbol) {
+        log.debug("Getting ticker by symbol: {}", symbol);
 
-        return TickerProto.Ticker.newBuilder()
-                .setSymbol(tickerNode.getSymbol())
-                .setName(tickerNode.getName())
-                .setExchange(exchangeProto)
-                .setTimestamp(tickerNode.getTimestamp())
-                .build();
+        return tickerRepository.findBySymbol(symbol);
     }
 
 }

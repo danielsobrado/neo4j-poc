@@ -76,31 +76,7 @@ class TickerServiceTest {
         verify(exchangeService).getExchangeNodeFromProto(any());
         verify(tickerRepository).save(any());
     }
-
-    @Test
-    void testCreateTickerWithProto() {
-        Ticker ticker = Ticker.newBuilder()
-                .setSymbol("ABC")
-                .setName("ABC Inc.")
-                .setExchange(Exchange.newBuilder()
-                        .setCode("NYSE")
-                        .setName("New York Stock Exchange")
-                        .setCountry("USA")
-                        .build())
-                .setTimestamp(123456789L)
-                .build();
-
-        when(exchangeService.getExchangeNodeFromProto(any())).thenReturn(new ExchangeNode());
-        when(tickerRepository.save(any())).thenReturn(Mono.just(new TickerNode()));
-
-        tickerService.createTicker(ticker).as(StepVerifier::create)
-                .expectNextCount(1)
-                .verifyComplete();
-
-        verify(exchangeService).getExchangeNodeFromProto(any());
-        verify(tickerRepository).save(any());
-    }
-
+    
     @Test
     public void testDeleteTicker() {
         // Given

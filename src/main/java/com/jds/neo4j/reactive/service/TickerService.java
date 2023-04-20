@@ -14,13 +14,11 @@ public interface TickerService {
 
     Mono<TickerNode> createTicker(String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
 
-    Mono<TickerNode> createTicker(TickerProto.Ticker tickerProto);
-
     Mono<TickerNode> updateTicker(String id, String tickerJson) throws InvalidProtocolBufferException, JsonProcessingException;
 
     Mono<TickerNode> updateTicker(String id, TickerProto.Ticker tickerProto);
 
     Mono<Void> deleteTicker(String id);
 
-    TickerProto.Ticker convertToProto(TickerNode tickerNode);
+    Mono<TickerNode> getTickerBySymbol(String symbol);
 }

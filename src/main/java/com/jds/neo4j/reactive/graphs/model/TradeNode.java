@@ -6,6 +6,11 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import static com.jds.neo4j.reactive.model.TradeProto.Side;
 
 @Getter
@@ -32,24 +37,41 @@ public class TradeNode {
     @NonNull
     private Long quantity;
 
+    @Relationship(type = "BUY", direction = Relationship.Direction.INCOMING)
+    private TraderNode buyer;
+
+    @Relationship(type = "SELL", direction = Relationship.Direction.INCOMING)
+    private TraderNode seller;
+
     private Side side;
 
     @NonNull
     private Long timestamp;
 
-    public TradeNode(TickerNode tickerNode, double v, long l, Side buy, ExchangeNode exchangeNode, long timestamp) {
+    private String name;
+
+    public TradeNode(TickerNode tickerNode, double price, long quantity, Side side, long timestamp, TraderNode trader) {
         this.ticker = tickerNode;
-        this.price = v;
-        this.quantity = l;
-        this.side = buy;
+        this.price = price;
+        this.quantity = quantity;
+        this.side = side;
         this.timestamp = timestamp;
+        this.name = generateName();
+
+        if (side == Side.BUY) {
+            this.buyer = trader;
+        } else {
+            this.seller = trader;
+        }
     }
 
-    public TradeNode(TickerNode tickerNode, double tradePrice, long tradeQuantity, Side tradeSide, long startTime) {
-        this.ticker = tickerNode;
-        this.price = tradePrice;
-        this.quantity = tradeQuantity;
-        this.side = tradeSide;
-        this.timestamp = startTime;
+    private String generateName() {
+
+        long currentTimeMillis = System.currentTimeMillis();
+
+        Instant instant = Instant.ofEpochMilli(currentTimeMillis);
+        LocalDate date = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yy");
+        return "Price " + date.format(formatter);
     }
 }

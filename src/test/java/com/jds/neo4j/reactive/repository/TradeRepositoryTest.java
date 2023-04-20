@@ -3,6 +3,7 @@ package com.jds.neo4j.reactive.repository;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
+import com.jds.neo4j.reactive.graphs.model.TraderNode;
 import com.jds.neo4j.reactive.model.TradeProto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -95,7 +96,8 @@ class TradeRepositoryTest {
         // Create ExchangeNode, TickerNode, and TradeNode objects
         ExchangeNode exchangeNode = new ExchangeNode(exchangeCode, exchangeName, exchangeCountry);
         TickerNode tickerNode = new TickerNode(tickerSymbol, tickerName, exchangeNode, startTime);
-        TradeNode tradeNode = new TradeNode(tickerNode, tradePrice, tradeQuantity, tradeSide, startTime);
+        TraderNode traderNode = new TraderNode("John Doe");
+        TradeNode tradeNode = new TradeNode(tickerNode, tradePrice, tradeQuantity, tradeSide, startTime, traderNode);
 
         // Save TickerNode and TradeNode objects to the repository
         System.out.println("Saving tickerNode: " + tickerNode);

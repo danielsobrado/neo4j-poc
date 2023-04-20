@@ -1,7 +1,6 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 
-import com.jds.neo4j.reactive.model.TickerProto;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -28,18 +27,5 @@ public class TickerNode {
 
     @NonNull
     private Long timestamp;
-
-    public TickerNode(TickerProto.Ticker ticker) {
-        this.symbol = ticker.getSymbol();
-        this.name = ticker.getName();
-        this.exchange = new ExchangeNode(ticker.getExchange());
-        this.timestamp = ticker.getTimestamp();
-    }
-
-    public TickerNode(String aapl, String name, String exchange, Long timestamp) {
-        this.symbol = aapl;
-        this.name = name;
-        this.exchange = new ExchangeNode(exchange);
-        this.timestamp = timestamp;
-    }
+    
 }

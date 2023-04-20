@@ -46,14 +46,14 @@ public class GenerateSamples {
         // Generate currency JSONs
         generateCurrencyJSONs();
 
+        // Generate exchange JSONs
+        generateExchangeJSONs();
+
         // Generate ETF JSONs
         generateETFJSONs();
 
         // Generate Index JSONs
         generateIndexJSONs();
-
-        // Generate exchange JSONs
-        generateExchangeJSONs();
 
         // Generate price JSONs
         generatePriceJSONs();
@@ -94,7 +94,7 @@ public class GenerateSamples {
         tickers.add(new TickerNode("MSFT", "Microsoft Corporation", nasdaq, System.currentTimeMillis()));
         tickers.add(new TickerNode("IBM", "International Business Machines Corporation", nyse, System.currentTimeMillis()));
 
-        tickerRepository.saveAll(tickers).subscribe();
+        tickerRepository.saveAllWithRetry(tickers).subscribe();
     }
 
     private void generateExchangeJSONs() {
@@ -104,7 +104,7 @@ public class GenerateSamples {
         exchanges.add(new ExchangeNode("NYSE", "New York Stock Exchange", "USA"));
         exchanges.add(new ExchangeNode("LSE", "London Stock Exchange", "UK"));
 
-        exchangeRepository.saveAll(exchanges).subscribe();
+        exchangeRepository.saveAllWithRetry(exchanges).subscribe();
     }
 
     private void generatePriceJSONs() {
@@ -115,7 +115,7 @@ public class GenerateSamples {
 
         prices.add(new PriceNode(aapl, 145.0, 147.0, 144.0, 146.0, 12000000.0, System.currentTimeMillis()));
 
-        priceRepository.saveAll(prices).subscribe();
+        priceRepository.saveAllWithRetry(prices).subscribe();
     }
 
     private void generateTraderJSONs() {
@@ -125,7 +125,7 @@ public class GenerateSamples {
         traders.add(new TraderNode("Bob", 150000.0, null));
         traders.add(new TraderNode("Charlie", 200000.0, null));
 
-        traderRepository.saveAll(traders).subscribe();
+        traderRepository.saveAllWithRetry(traders).subscribe();
     }
 
     private void generateETFJSONs() {
@@ -145,7 +145,7 @@ public class GenerateSamples {
 
         etfs.add(etf1);
 
-        etfRepository.saveAll(etfs).subscribe();
+        etfRepository.saveAllWithRetry(etfs).subscribe();
     }
 
     private void generateIndexJSONs() {
@@ -165,17 +165,17 @@ public class GenerateSamples {
 
         indices.add(index1);
 
-        indexRepository.saveAll(indices).subscribe();
+        indexRepository.saveAllWithRetry(indices).subscribe();
     }
 
 
     private void generateSpinoffJSONs() {
         List<Spinoff> spinoffs = new ArrayList<>();
-        
+
         Spinoff spinoff1 = new Spinoff(new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis()), new TickerNode("APPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis()), System.currentTimeMillis());
         spinoffs.add(spinoff1);
 
-        spinoffRepository.saveAll(spinoffs).subscribe();
+        spinoffRepository.saveAllWithRetry(spinoffs).subscribe();
     }
 
 
@@ -183,10 +183,12 @@ public class GenerateSamples {
         List<TradeNode> trades = new ArrayList<>();
 
         TickerNode ticker1 = new TickerNode("AAPL", "Apple Inc.", new ExchangeNode("NASDAQ", "NASDAQ Stock Market", "USA"), System.currentTimeMillis());
-        TradeNode trade1 = new TradeNode(ticker1, 120.0, 100L, TradeProto.Side.BUY, System.currentTimeMillis());
+        TraderNode trader1 = new TraderNode("John Doe");
+        TradeNode trade1 = new TradeNode(ticker1, 120.0, 100L, TradeProto.Side.BUY, System.currentTimeMillis(), trader1);
         trades.add(trade1);
 
-        tradeRepository.saveAll(trades).subscribe();
+        // Save all trades
+        tradeRepository.saveAllWithRetry(trades).subscribe();
     }
 
 }
