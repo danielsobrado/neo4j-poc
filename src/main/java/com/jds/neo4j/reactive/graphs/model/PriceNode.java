@@ -6,6 +6,11 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -48,5 +53,13 @@ public class PriceNode {
         this.close = close;
         this.volume = volume;
         this.timestamp = currentTimeMillis;
+        this.name = generateName(currentTimeMillis);
+    }
+
+    private String generateName(long currentTimeMillis) {
+        Instant instant = Instant.ofEpochMilli(currentTimeMillis);
+        LocalDate date = LocalDate.ofInstant(instant, ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yy");
+        return "Price " + date.format(formatter);
     }
 }
