@@ -21,16 +21,17 @@ public class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
     @Override
     public Mono<T> saveWithRetry(T entity) {
         return reactiveNeo4jTemplate.save(entity)
-                .retryWhen(Retry.backoff(3, Duration.ofMillis(100)).maxBackoff(Duration.ofSeconds(1)));
+                .retryWhen(Retry.backoff(3, Duration.ofMillis(500)).maxBackoff(Duration.ofSeconds(5)))
+                .doOnError(throwable -> log.error("Error saving entity: " + entity.toString() + ", error: " + throwable.getMessage()));
     }
-
 
     @Override
     public Flux<T> saveAllWithRetry(List<T> entities) {
         return Flux.fromIterable(entities)
                 .flatMap(entity -> reactiveNeo4jTemplate.save(entity)
-                        .retryWhen(Retry.backoff(3, Duration.ofMillis(100))
-                                .maxBackoff(Duration.ofSeconds(1))))
+                        .retryWhen(Retry.backoff(3, Duration.ofMillis(500))
+                                .maxBackoff(Duration.ofSeconds(5)))
+                        .doOnError(throwable -> log.error("Error saving entity: " + entity.toString() + ", error: " + throwable.getMessage())))
                 .doOnError(throwable -> log.error("Error saving entities: " + throwable.getMessage()));
     }
 }

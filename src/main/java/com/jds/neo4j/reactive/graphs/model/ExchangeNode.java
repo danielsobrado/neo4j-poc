@@ -1,8 +1,6 @@
 package com.jds.neo4j.reactive.graphs.model;
 
-import com.jds.neo4j.reactive.model.ExchangeProto;
 import lombok.*;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -11,7 +9,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
-@AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Node("Exchange")
@@ -22,16 +19,18 @@ public class ExchangeNode {
     @NonNull
     private String code;
 
+    @NonNull
     private String name;
 
+    @NonNull
     private String country;
 
-    @Version
-    private Long version;
+    @NonNull
+    private CurrencyNode currency;
 
-    public ExchangeNode(ExchangeProto.Exchange exchange) {
-        this.code = exchange.getCode();
-        this.name = exchange.getName();
-        this.country = exchange.getCountry();
+    public ExchangeNode(String exchangeCode, String exchangeName, String exchangeCountry) {
+        this.code = exchangeCode;
+        this.name = exchangeName;
+        this.country = exchangeCountry;
     }
 }

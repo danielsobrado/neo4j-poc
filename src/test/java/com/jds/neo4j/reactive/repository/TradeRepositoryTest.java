@@ -1,9 +1,6 @@
 package com.jds.neo4j.reactive.repository;
 
-import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
-import com.jds.neo4j.reactive.graphs.model.TickerNode;
-import com.jds.neo4j.reactive.graphs.model.TradeNode;
-import com.jds.neo4j.reactive.graphs.model.TraderNode;
+import com.jds.neo4j.reactive.graphs.model.*;
 import com.jds.neo4j.reactive.model.TradeProto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -115,7 +112,14 @@ class TradeRepositoryTest {
             return trade;
         })).expectNextMatches(foundTrade -> {
             // Use Objects.equals() method to avoid NullPointerException
-            return Objects.equals(foundTrade.getTicker().getSymbol(), tickerSymbol) && Objects.equals(foundTrade.getTicker().getName(), tickerName) && Objects.equals(foundTrade.getTicker().getExchange().getCode(), exchangeCode) && foundTrade.getPrice() == tradePrice && foundTrade.getQuantity() == tradeQuantity && foundTrade.getSide() == tradeSide && foundTrade.getTimestamp() >= startTime && foundTrade.getTimestamp() <= endTime;
+            return Objects.equals(foundTrade.getTicker().getSymbol(), tickerSymbol)
+                    && Objects.equals(foundTrade.getTicker().getName(), tickerName)
+                    && Objects.equals(foundTrade.getTicker().getExchange().getCode(), exchangeCode)
+                    && Objects.equals(foundTrade.getPrice().getClose(), tradePrice)
+                    && foundTrade.getQuantity() == tradeQuantity
+                    && foundTrade.getSide() == tradeSide
+                    && foundTrade.getTimestamp() >= startTime
+                    && foundTrade.getTimestamp() <= endTime;
         }).verifyComplete();
     }
 
@@ -124,7 +128,7 @@ class TradeRepositoryTest {
 
         TradeNode tradeNode = new TradeNode();
         tradeNode.setTicker(tickerNode);
-        tradeNode.setPrice(price);
+        tradeNode.setPrice(new PriceNode(tickerNode, price.doubleValue(), System.currentTimeMillis()));
         tradeNode.setQuantity(quantity);
         tradeNode.setSide(side);
         tradeNode.setTimestamp(System.currentTimeMillis());

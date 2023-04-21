@@ -1,7 +1,6 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -20,11 +19,9 @@ public class CurrencyNode {
     @NonNull
     private String code;
 
+    @NonNull
     private String name;
 
     private String symbol;
-
-    @Version
-    private Long version;
-
+    
 }

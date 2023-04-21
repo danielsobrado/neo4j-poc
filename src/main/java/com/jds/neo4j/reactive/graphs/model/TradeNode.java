@@ -32,7 +32,7 @@ public class TradeNode {
     private TickerNode ticker;
 
     @NonNull
-    private Double price;
+    private PriceNode price;
 
     @NonNull
     private Long quantity;
@@ -50,7 +50,7 @@ public class TradeNode {
 
     private String name;
 
-    public TradeNode(TickerNode tickerNode, double price, long quantity, Side side, long timestamp, TraderNode trader) {
+    public TradeNode(TickerNode tickerNode, PriceNode price, long quantity, Side side, long timestamp, TraderNode trader) {
         this.ticker = tickerNode;
         this.price = price;
         this.quantity = quantity;
@@ -62,6 +62,21 @@ public class TradeNode {
             this.buyer = trader;
         } else {
             this.seller = trader;
+        }
+    }
+
+    public TradeNode(TickerNode tickerNode, double tradePrice, long tradeQuantity, Side tradeSide, long startTime, TraderNode traderNode) {
+        this.ticker = tickerNode;
+        this.price = new PriceNode(tickerNode, tradePrice, startTime);
+        this.quantity = tradeQuantity;
+        this.side = tradeSide;
+        this.timestamp = startTime;
+        this.name = generateName();
+
+        if (tradeSide == Side.BUY) {
+            this.buyer = traderNode;
+        } else {
+            this.seller = traderNode;
         }
     }
 

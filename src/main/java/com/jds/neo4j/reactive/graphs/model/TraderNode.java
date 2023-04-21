@@ -1,7 +1,6 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
@@ -22,10 +21,12 @@ public class TraderNode {
     @Id
     private String name;
 
-    @Version
-    private Long version;
-
     private Double cash;
 
     private Set<PortfolioNode> portfolios;
+
+    public TraderNode(String name, double cash) {
+        this.name = name;
+        this.cash = cash;
+    }
 }

@@ -56,6 +56,13 @@ public class PriceNode {
         this.name = generateName(currentTimeMillis);
     }
 
+    public PriceNode(TickerNode ticker, double close, long currentTimeMillis) {
+        this.ticker = ticker;
+        this.close = close;
+        this.timestamp = currentTimeMillis;
+        this.name = generateName(currentTimeMillis);
+    }
+
     private String generateName(long currentTimeMillis) {
         Instant instant = Instant.ofEpochMilli(currentTimeMillis);
         LocalDate date = LocalDate.ofInstant(instant, ZoneId.systemDefault());
