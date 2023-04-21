@@ -1,5 +1,6 @@
 package com.jds.neo4j.reactive.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jds.neo4j.reactive.graphs.model.ExchangeNode;
 import com.jds.neo4j.reactive.graphs.model.TickerNode;
 import com.jds.neo4j.reactive.graphs.model.TradeNode;
@@ -36,6 +37,9 @@ public class TradeServiceTest {
     private TickerService tickerService;
     @InjectMocks
     private TradeServiceImpl tradeService;
+
+    @Mock
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
@@ -97,7 +101,7 @@ public class TradeServiceTest {
         when(tradeRepository.save(any(TradeNode.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         // call the method under test
-        Mono<TradeNode> result = tradeService.updateTrade(id, new TradeNode(tickerNode, 100.0, 10L, Side.BUY, System.currentTimeMillis(), traderNode));
+        Mono<TradeNode> result = tradeService.updateTrade(id, new TradeNode(tickerNode, 110.0, 10L, Side.BUY, System.currentTimeMillis(), traderNode));
 
         // verify that the result is not null
         assertNotNull(result);

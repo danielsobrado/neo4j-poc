@@ -1,6 +1,7 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
@@ -25,6 +26,9 @@ public class Spinoff {
 
     @NonNull
     private Long effective_date;
+
+    @Version
+    private Long version;
 
     public Spinoff(TickerNode parentTicker, TickerNode spinoffTicker, Long effective_date) {
         this.parentTicker = parentTicker;

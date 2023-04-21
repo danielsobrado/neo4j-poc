@@ -2,6 +2,7 @@ package com.jds.neo4j.reactive.graphs.model;
 
 
 import lombok.*;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -19,6 +20,7 @@ public class TickerNode {
     @NonNull
     @Id
     private String symbol;
+    
     private String name;
 
     @Relationship(type = "LISTED_ON", direction = Relationship.Direction.OUTGOING)
@@ -27,5 +29,7 @@ public class TickerNode {
 
     @NonNull
     private Long timestamp;
-    
+
+    @Version
+    private Long version;
 }

@@ -1,6 +1,7 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -20,11 +21,14 @@ public class IndexNode {
     @NonNull
     @Id
     private String symbol;
-    
+
     private String name;
 
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
     private List<IndexComponent> components;
+
+    @Version
+    private Long version;
 
     public IndexNode(String symbol, String name) {
         this.symbol = symbol;

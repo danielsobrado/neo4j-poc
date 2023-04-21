@@ -1,6 +1,7 @@
 package com.jds.neo4j.reactive.graphs.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
@@ -25,9 +26,12 @@ public class IndexComponent {
     @NonNull
     private Double weight;
 
+    @Version
+    private Long version;
+
     public IndexComponent(TickerNode tickerNode, double weight) {
         this.ticker = tickerNode;
         this.weight = weight;
     }
-    
+
 }
