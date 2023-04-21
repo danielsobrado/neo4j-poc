@@ -80,6 +80,10 @@ public class TradeNode {
         }
     }
 
+    public TradeNode(TraderNode traderNode, TickerNode tickerNode, int i, double v) {
+
+    }
+
     private String generateName() {
 
         long currentTimeMillis = System.currentTimeMillis();

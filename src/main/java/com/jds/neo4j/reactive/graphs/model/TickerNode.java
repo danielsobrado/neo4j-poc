@@ -30,4 +30,9 @@ public class TickerNode {
     @NonNull
     private Long timestamp;
 
+    public TickerNode(String symbol, String name, ExchangeNode exchange) {
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+    }
 }

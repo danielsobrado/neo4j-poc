@@ -4,8 +4,10 @@ import lombok.*;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -25,6 +27,10 @@ public class PortfolioNode {
     @Version
     private Long version;
 
-    private Set<TickerNode> tickers;
+    @Relationship(type = "HOLDS")
+    private Map<TickerNode, PortfolioHolds> tickers = new HashMap<>();
 
+    public void addTicker(TickerNode ticker, Long quantity) {
+        tickers.put(ticker, new PortfolioHolds(ticker, quantity));
+    }
 }

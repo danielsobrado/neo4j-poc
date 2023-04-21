@@ -30,4 +30,8 @@ public class IndexNode {
         this.symbol = symbol;
         this.name = name;
     }
+
+    public void addTicker(TickerNode ticker, Long quantity) {
+        components.add(new IndexComponent(ticker, quantity));
+    }
 }
