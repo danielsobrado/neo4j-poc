@@ -6,6 +6,9 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,12 +30,27 @@ public class TickerNode {
     @NonNull
     private ExchangeNode exchange;
 
+    @Relationship(type = "PRICE", direction = Relationship.Direction.OUTGOING)
+    private List<PriceNode> prices = new ArrayList<>();
+
     @NonNull
     private Long timestamp;
+
+    @Relationship(type = "HOLDS", direction = Relationship.Direction.INCOMING)
+    private List<PortfolioNode> heldByPortfolios = new ArrayList<>();
 
     public TickerNode(String symbol, String name, ExchangeNode exchange) {
         this.symbol = symbol;
         this.name = name;
         this.exchange = exchange;
     }
+
+    public void addHoldingPortfolio(PortfolioNode portfolio) {
+        heldByPortfolios.add(portfolio);
+    }
+
+    public void addPrice(PriceNode priceNode) {
+        prices.add(priceNode);
+    }
+
 }

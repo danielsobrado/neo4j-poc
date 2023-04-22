@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,14 +25,16 @@ public class IndexNode {
     private String name;
 
     @Relationship(type = "COMPONENT_OF", direction = Relationship.Direction.OUTGOING)
-    private List<IndexComponent> components;
+    private List<IndexComponent> components = new ArrayList<>();
 
     public IndexNode(String symbol, String name) {
         this.symbol = symbol;
         this.name = name;
     }
 
-    public void addTicker(TickerNode ticker, Long quantity) {
-        components.add(new IndexComponent(ticker, quantity));
+    public void addTicker(TickerNode ticker, Long weight) {
+        IndexComponent component = new IndexComponent(ticker, weight);
+        components.add(component);
     }
+
 }

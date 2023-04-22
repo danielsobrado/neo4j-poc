@@ -17,17 +17,13 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 public class IndexComponent {
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Include
     private Long id;
 
     @TargetNode
+    @NonNull
     private TickerNode ticker;
 
     @NonNull
-    private Double weight;
-
-    public IndexComponent(TickerNode tickerNode, double weight) {
-        this.ticker = tickerNode;
-        this.weight = weight;
-    }
-
+    private Long weight;
 }

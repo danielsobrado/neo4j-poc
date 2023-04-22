@@ -25,10 +25,6 @@ public class PriceNode {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Relationship(type = "HAS_TICKER", direction = Relationship.Direction.INCOMING)
-    @NonNull
-    private TickerNode ticker;
-
     private Double open;
 
     private Double high;
@@ -45,8 +41,11 @@ public class PriceNode {
     @NonNull
     private Long timestamp;
 
-    public PriceNode(TickerNode tickerNode, double open, double high, double low, double close, double volume, long currentTimeMillis) {
-        this.ticker = tickerNode;
+    @Relationship(type = "PRICE_FOR", direction = Relationship.Direction.INCOMING)
+    private TickerNode ticker;
+
+    public PriceNode(TickerNode ticker, double open, double high, double low, double close, double volume, long currentTimeMillis) {
+        this.ticker = ticker;
         this.open = open;
         this.high = high;
         this.low = low;

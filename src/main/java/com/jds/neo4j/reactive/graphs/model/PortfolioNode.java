@@ -6,8 +6,8 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,9 +28,12 @@ public class PortfolioNode {
     private Long version;
 
     @Relationship(type = "HOLDS")
-    private Map<TickerNode, PortfolioHolds> tickers = new HashMap<>();
+    private List<TickerNode> holdings = new ArrayList<>();
 
     public void addTicker(TickerNode ticker, Long quantity) {
-        tickers.put(ticker, new PortfolioHolds(ticker, quantity));
+        holdings.add(ticker);
+        ticker.addHoldingPortfolio(this);
     }
+
 }
+

@@ -1,8 +1,10 @@
 package com.jds.neo4j.reactive.util;
 
 import com.jds.neo4j.reactive.graphs.model.*;
-import com.jds.neo4j.reactive.model.TradeProto;
 import com.jds.neo4j.reactive.repository.*;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,9 @@ import java.util.List;
 
 @Component
 public class GenerateSamples {
+
+    @Autowired
+    private Driver driver;
 
     @Autowired
     private CurrencyRepository currencyRepository;
@@ -41,6 +46,9 @@ public class GenerateSamples {
     @Autowired
     private TradeRepository tradeRepository;
 
+    @Autowired
+    private PortfolioRepository portfolioRepository;
+
     // Store currencies, exchanges, tickers, and traders as class members
     private List<CurrencyNode> currencies;
     private List<ExchangeNode> exchanges;
@@ -48,6 +56,8 @@ public class GenerateSamples {
     private List<TraderNode> traders;
 
     public void generateSampleData() {
+        createUniqueConstraints();
+
         // Generate currency JSONs
         currencies = generateCurrencyJSONs();
 
@@ -74,6 +84,20 @@ public class GenerateSamples {
 
         // Generate trade JSONs
         generateTradeJSONs();
+    }
+
+    private void createUniqueConstraints() {
+        try (Session session = driver.session()) {
+            // Create unique constraint for Ticker nodes
+            String createTickerConstraintQuery = "CREATE CONSTRAINT unique_ticker_symbol IF NOT EXISTS FOR (t:Ticker) REQUIRE t.symbol IS UNIQUE";
+            Result tickerResult = session.run(createTickerConstraintQuery);
+            System.out.println("Created unique constraint on Ticker nodes: " + tickerResult.consume().counters().constraintsAdded());
+
+            // Create unique constraint for Portfolio nodes
+            String createPortfolioConstraintQuery = "CREATE CONSTRAINT unique_portfolio_name IF NOT EXISTS FOR (p:Portfolio) REQUIRE p.name IS UNIQUE";
+            Result portfolioResult = session.run(createPortfolioConstraintQuery);
+            System.out.println("Created unique constraint on Portfolio nodes: " + portfolioResult.consume().counters().constraintsAdded());
+        }
     }
 
     private List<CurrencyNode> generateCurrencyJSONs() {
@@ -171,8 +195,10 @@ public class GenerateSamples {
         prices.add(new PriceNode(ibm, 121.0, 123.0, 120.0, 122.0, 12000000.0, System.currentTimeMillis() - 86400000));
         prices.add(new PriceNode(ibm, 119.0, 121.0, 118.0, 120.0, 10000000.0, System.currentTimeMillis() - 172800000));
 
+        // Save the prices
         priceRepository.saveAllWithRetry(prices).subscribe();
     }
+
 
     private void generateETFJSONs() {
         List<ETFNode> etfs = new ArrayList<>();
@@ -228,39 +254,66 @@ public class GenerateSamples {
         TickerNode san = tickers.stream().filter(t -> t.getSymbol().equals("SAN")).findFirst().orElse(null);
         TickerNode tef = tickers.stream().filter(t -> t.getSymbol().equals("TEF")).findFirst().orElse(null);
 
-        trades.add(new TradeNode(bob, san, 100, 3.5));
-        trades.add(new TradeNode(bob, tef, 200, 4.2));
+        TradeNode trade1 = new TradeNode(bob, san, 100, 3.5);
+        TradeNode trade2 = new TradeNode(bob, tef, 200, 4.2);
+        trades.add(trade1);
+        trades.add(trade2);
+
+        PortfolioNode bobPortfolio = bob.getPortfolios().stream().findFirst().orElse(null);
+        if (bobPortfolio != null) {
+            bobPortfolio.addTicker(san, 100L);
+            bobPortfolio.addTicker(tef, 200L);
+            portfolioRepository.saveWithRetry(bobPortfolio).subscribe(); // Save updated bobPortfolio
+        }
+
 
         // Second set of trades
         TickerNode ticker1 = tickers.stream().filter(t -> t.getSymbol().equals("AAPL")).findFirst().orElse(null);
         TraderNode trader1 = traders.stream().filter(t -> t.getName().equals("Alice")).findFirst().orElse(null);
-        if (trader1 == null) {
-            trader1 = new TraderNode("Alice");
-            traders.add(trader1);
-            traderRepository.saveWithRetry(trader1).subscribe();
-        }
         PriceNode priceNode = new PriceNode(ticker1, 120.0, System.currentTimeMillis());
-        TradeNode trade1 = new TradeNode(ticker1, priceNode, 100L, TradeProto.Side.BUY, System.currentTimeMillis(), trader1);
-        trades.add(trade1);
+        TradeNode trade3 = new TradeNode(trader1, ticker1, 100, 120.0);
+        trades.add(trade3);
 
         PortfolioNode portfolio1 = trader1.getPortfolios().stream().findFirst().orElse(null);
         if (portfolio1 != null) {
             portfolio1.addTicker(ticker1, 100L);
+            portfolioRepository.saveWithRetry(portfolio1).subscribe(); // Save updated portfolio1
         }
 
         TickerNode ticker2 = tickers.stream().filter(t -> t.getSymbol().equals("MSFT")).findFirst().orElse(null);
         TraderNode trader2 = traders.stream().filter(t -> t.getName().equals("Bob")).findFirst().orElse(null);
         PriceNode priceNode2 = new PriceNode(ticker2, 110.0, System.currentTimeMillis());
-        TradeNode trade2 = new TradeNode(ticker2, priceNode2, 200L, TradeProto.Side.BUY, System.currentTimeMillis(), trader2);
-        trades.add(trade2);
+        TradeNode trade4 = new TradeNode(trader2, ticker2, 200, 110.0);
+        trades.add(trade4);
 
         PortfolioNode portfolio2 = trader2.getPortfolios().stream().findFirst().orElse(null);
         if (portfolio2 != null) {
             portfolio2.addTicker(ticker2, 200L);
+            portfolioRepository.saveWithRetry(portfolio2).subscribe(); // Save updated portfolio2
         }
 
-        // Save all trades
+        TickerNode ticker3 = tickers.stream().filter(t -> t.getSymbol().equals("GOOG")).findFirst().orElse(null);
+        TraderNode trader3 = traders.stream().filter(t -> t.getName().equals("Charlie")).findFirst().orElse(null);
+        PriceNode priceNode3 = new PriceNode(ticker3, 1000.0, System.currentTimeMillis());
+        TradeNode trade5 = new TradeNode(trader3, ticker3, 50, 1000.0);
+        trades.add(trade5);
+
+        PortfolioNode portfolio3 = trader3.getPortfolios().stream().findFirst().orElse(null);
+        if (portfolio3 != null) {
+            portfolio3.addTicker(ticker3, 50L);
+            portfolioRepository.saveWithRetry(portfolio3).subscribe(); // Save updated portfolio3
+        }
+
+        // Add new prices to ticker nodes and save
+        ticker1.addPrice(priceNode);
+        tickerRepository.saveWithRetry(ticker1).subscribe();
+        ticker2.addPrice(priceNode2);
+        tickerRepository.saveWithRetry(ticker2).subscribe();
+        ticker3.addPrice(priceNode3);
+        tickerRepository.saveWithRetry(ticker3).subscribe();
+
         tradeRepository.saveAllWithRetry(trades).subscribe();
     }
+
 
 }
