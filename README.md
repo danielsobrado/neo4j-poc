@@ -13,6 +13,8 @@ The project consists of five services:
   historical prices, etc.
 - **Ticker Service:** This service handles real-time price updates for various assets.
 - **Trade Service:** This service is responsible for managing trades made by users.
+- **Portfolio Service:** This service manages user portfolios, allowing for the association of trades and updating
+  ticker quantities.
 
 Each service is implemented using Java 17 and Spring Boot, and uses Swagger for API documentation.
 
@@ -84,7 +86,7 @@ against the services.
 To run the tests, simply execute the following command:
 
 ```shell
-docker-compose down
+./gradlew test
 ```
 
 ## Installing and Compiling Protobuf
@@ -160,6 +162,7 @@ UI by navigating to the following URLs in your web browser:
 - Price Service: http://localhost:8080/swagger-ui/index.html#/price-controller
 - Ticker Service: http://localhost:8080/swagger-ui/index.html#/ticker-controller
 - Trade Service: http://localhost:8080/swagger-ui/index.html#/trade-controller
+- Portfolio Service: http://localhost:8080/swagger-ui/index.html#/portfolio-controller
 
 ![SwaggerExample](https://github.com/danielsobrado/neo4j-poc/blob/main/img/SwaggerExample.png "SwaggerExample")
 
