@@ -189,6 +189,8 @@ Pull all nodes from the database:
 MATCH (n) RETURN n
 ```
 
+![Graph](https://github.com/danielsobrado/neo4j-poc/blob/main/img/Neo4JGraph.png "Graph")
+
 ## Contributing
 
 If you'd like to contribute to this project, please feel free to submit a pull request.
