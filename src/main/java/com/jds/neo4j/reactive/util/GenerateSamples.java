@@ -266,11 +266,9 @@ public class GenerateSamples {
             portfolioRepository.saveWithRetry(bobPortfolio).subscribe(); // Save updated bobPortfolio
         }
 
-
         // Second set of trades
         TickerNode ticker1 = tickers.stream().filter(t -> t.getSymbol().equals("AAPL")).findFirst().orElse(null);
         TraderNode trader1 = traders.stream().filter(t -> t.getName().equals("Alice")).findFirst().orElse(null);
-        PriceNode priceNode = new PriceNode(ticker1, 120.0, System.currentTimeMillis());
         TradeNode trade3 = new TradeNode(trader1, ticker1, 100, 120.0);
         trades.add(trade3);
 
@@ -282,7 +280,6 @@ public class GenerateSamples {
 
         TickerNode ticker2 = tickers.stream().filter(t -> t.getSymbol().equals("MSFT")).findFirst().orElse(null);
         TraderNode trader2 = traders.stream().filter(t -> t.getName().equals("Bob")).findFirst().orElse(null);
-        PriceNode priceNode2 = new PriceNode(ticker2, 110.0, System.currentTimeMillis());
         TradeNode trade4 = new TradeNode(trader2, ticker2, 200, 110.0);
         trades.add(trade4);
 
@@ -294,7 +291,6 @@ public class GenerateSamples {
 
         TickerNode ticker3 = tickers.stream().filter(t -> t.getSymbol().equals("GOOG")).findFirst().orElse(null);
         TraderNode trader3 = traders.stream().filter(t -> t.getName().equals("Charlie")).findFirst().orElse(null);
-        PriceNode priceNode3 = new PriceNode(ticker3, 1000.0, System.currentTimeMillis());
         TradeNode trade5 = new TradeNode(trader3, ticker3, 50, 1000.0);
         trades.add(trade5);
 
@@ -305,12 +301,17 @@ public class GenerateSamples {
         }
 
         // Add new prices to ticker nodes and save
-        ticker1.addPrice(priceNode);
-        tickerRepository.saveWithRetry(ticker1).subscribe();
-        ticker2.addPrice(priceNode2);
-        tickerRepository.saveWithRetry(ticker2).subscribe();
-        ticker3.addPrice(priceNode3);
-        tickerRepository.saveWithRetry(ticker3).subscribe();
+        PriceNode newPriceNode1 = new PriceNode(120.0, System.currentTimeMillis());
+        newPriceNode1.setTicker(ticker1);
+        priceRepository.saveWithRetry(newPriceNode1).subscribe();
+
+        PriceNode newPriceNode2 = new PriceNode(110.0, System.currentTimeMillis());
+        newPriceNode2.setTicker(ticker2);
+        priceRepository.saveWithRetry(newPriceNode2).subscribe();
+
+        PriceNode newPriceNode3 = new PriceNode(1000.0, System.currentTimeMillis());
+        newPriceNode3.setTicker(ticker3);
+        priceRepository.saveWithRetry(newPriceNode3).subscribe();
 
         tradeRepository.saveAllWithRetry(trades).subscribe();
     }

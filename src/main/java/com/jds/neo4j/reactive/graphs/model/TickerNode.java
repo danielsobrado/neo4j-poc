@@ -30,9 +30,6 @@ public class TickerNode {
     @NonNull
     private ExchangeNode exchange;
 
-    @Relationship(type = "PRICE", direction = Relationship.Direction.OUTGOING)
-    private List<PriceNode> prices = new ArrayList<>();
-
     @NonNull
     private Long timestamp;
 
@@ -47,10 +44,6 @@ public class TickerNode {
 
     public void addHoldingPortfolio(PortfolioNode portfolio) {
         heldByPortfolios.add(portfolio);
-    }
-
-    public void addPrice(PriceNode priceNode) {
-        prices.add(priceNode);
     }
 
 }

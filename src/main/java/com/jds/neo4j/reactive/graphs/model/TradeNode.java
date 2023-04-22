@@ -81,7 +81,13 @@ public class TradeNode {
     }
 
     public TradeNode(TraderNode traderNode, TickerNode tickerNode, int i, double v) {
-
+        this.buyer = traderNode;
+        this.ticker = tickerNode;
+        this.quantity = (long) i;
+        this.price = new PriceNode(tickerNode, v, System.currentTimeMillis());
+        this.side = Side.BUY;
+        this.timestamp = System.currentTimeMillis();
+        this.name = generateName();
     }
 
     private String generateName() {
